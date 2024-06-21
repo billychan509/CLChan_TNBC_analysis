@@ -155,7 +155,17 @@ es.max_spearman_NF_KB_pathway<- gsva(X, deg_list_spearmen_NFKB_pathway,
 library(ComplexHeatmap)
 library(circlize)
 
-Heatmap(cor(as.matrix(df_spearmen), method = c('spearman')), border = T,
+df_spearmen_NFKB = data_frame("mac_APOE_TNBC" = es.max_spearman_NF_KB_pathway$mac_APOE,
+                "mac_FABP5_TNBC" = es.max_spearman_NF_KB_pathway$mac_FABP5,
+                "NFKB1" = es.max_spearman_NF_KB_pathway$NFKB1,
+                "NFKB2" = es.max_spearman_NF_KB_pathway$NFKB2, 
+                "NFKBIA" = es.max_spearman_NF_KB_pathway$NFKBIA,
+                "IKKα" = es.max_spearman_NF_KB_pathway$IKKα, 
+                "IKKβ " = es.max_spearman_NF_KB_pathway$IKBKB,
+                "NEMO" = es.max_spearman_NF_KB_pathway$NEMO)
+               
+
+Heatmap(cor(as.matrix(df_spearmen_NFKB), method = c('spearman')), border = T,
         col = colorRamp2(c(-1,-0.5, 0,0.5, 1), c("blue","cornflowerblue", "white", "brown1","red3"))) ## this gives Figure 2i
 
 
