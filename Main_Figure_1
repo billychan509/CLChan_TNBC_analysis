@@ -113,10 +113,37 @@ for (x in file_name_Pal) {
 merged_seurat_obj_Pal <- merge(GSM4909281_seurat_obj,c(GSM4909282_seurat_obj,GSM4909283_seurat_obj,GSM4909284_seurat_obj,
                       GSM4909285_seurat_obj,GSM4909286_seurat_obj,GSM4909287_seurat_obj,GSM4909288_seurat_obj))
 
+all.genes <-row.names(merged_seurat_obj_Pal)
 
+merged_seurat_obj_Pal <- merged_seurat_obj_Pal %>%
+  NormalizeData() %>% 
+  FindVariableFeatures()  %>%
+  ScaleData() %>%
+  RunPCA()
+
+### Running Harmony to remove batch effects between patients
+merged_seurat_obj_Pal <- merged_seurat_obj_Pal %>% 
+  RunHarmony("barcode") # perform harmony
+
+harmony_embeddings <- Embeddings(merged_seurat_obj, 'harmony')
+harmony_embeddings[1:11, 1:11]
+
+#### use Elbow plot to check the number of dimensions:
+ElbowPlot(merged_seurat_obj_Pal , reduction='pca', ndims = 50)
+
+DimPlot(merged_seurat_obj_Pal , reduction = "pca", label = FALSE,
+        group.by = "patient")
+
+### RUN UMAP:
+merged_seurat_obj_Pal <- merged_seurat_obj_Pal %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.04) %>%
+  RunUMAP(dims = 1:50, reduction='pca')
 
 mac_top50_LAM <- list('mac_APOE_TNBC_Wu et al.' = marker_cosg_wu$name$mac_APOE_TNBC, 
                       'mac_APOE_TNBC_Pal et al.' = marker_cosg$names$mac_APOE)
+##### incomplete......
+
 
 venn.diagram(x= testing,
              scaled = T,
@@ -124,7 +151,7 @@ venn.diagram(x= testing,
              #col= c("#3498db", "#f1c40f", "#e74c3c", "#2ecc71"), 
              col= c("#e74c3c", "#2ecc71"),
              label.col ='black' , 
-             cex = 5, # 数字大小
+             cex = 5, 
              #fontface = "bold", 
              #fill= c("#3498db", "#f1c40f","#e74c3c", "#2ecc71"),
              fill= c( "#e74c3c", "#2ecc71"),
