@@ -4,11 +4,35 @@ library(enrichplot)
 library(enrichR)
 
 # Please pre-process the TCGA-BRCA data first, we only need to the bulk-RNA seq data from the basal-like breast cancer patients for correlation analysis/ survival analysis:
+# Figure 2a and 2d:
 
-#Figure 2b.
+library(ggpubr)
+
+ggscatter(df_spearmen, y = 'Phagocytosis signature', x = "FOLR2_signature",
+          color = "black", shape = 21, size = 3.5, # Points color, shape and size
+          add = "reg.line",  # Add regression line
+          add.params = list(color = "red", fill = "lightgray"), # Customize reg. line
+          conf.int = TRUE, # Add confidence interval
+          cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+          cor.coeff.args = list(method = "spearman",  label.sep = "\n"),
+          cor.coef.size = 4,
+          font.label = c(22,"bold")) ## Figure 2a
+
+ggscatter(df_spearmen, y = 'Phagocytosis signature', x = "FOLR2_signature",
+          color = "black", shape = 21, size = 3.5, # Points color, shape and size
+          add = "reg.line",  # Add regression line
+          add.params = list(color = "red", fill = "lightgray"), # Customize reg. line
+          conf.int = TRUE, # Add confidence interval
+          cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+          cor.coeff.args = list(method = "spearman",  label.sep = "\n"),
+          cor.coef.size = 4,
+          font.label = c(22,"bold")) ## Figure 2d
 
 
-#Figure 2c.
+
+# Figure 2b.
+
+#Figure 2c, 2f:
 GO_results_mac_FABP5  <- enrichGO(gene = c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A1", "BRI3", "LHFPL2", "GPNMB", "GM2A", 
                                            "RNASE1", "TIMP2", "MSR1", "LAMP", "NUPR1", "FNIP2", "CTSD", "APOC1", "CSTB", "ACP5", "RALA"), 
                                  OrgDb = "org.Hs.eg.db", 
@@ -17,30 +41,24 @@ GO_results_mac_FABP5  <- enrichGO(gene = c("FABP5", "SPP1", "PLIN2", "SCARB2", "
                                  pvalueCutoff = 0.05,
                                  qvalueCutoff = 0.05)
 
-
 plot(barplot(GO_results_mac_FABP5, showCategory =  c('lipid transport','regulation of lipid localization',
                                                      'lipid storage','antigen processing and presentation of peptide antigen',
                                                      'antigen processing and presentation of exogenous peptide antigen via MHC class II'),
-             title = "Enriched Biological Processes (mac_FABP5)", font.size = 13))
-
-
-#Figure 2e.
+             title = "Enriched Biological Processes (mac_FABP5)", font.size = 13)) #Figure 2c,
 
 
 
-#Figure 2f.
 GO_results_mac_APOE  <- enrichGO(gene = c("ADAMDEC1", "ACP5", "PLD3", "LIPA", "KCNMA1", "GM2A", "SCPEP1", "SERPING1", "APOE", "TSPAN4",
                                             "CTSC", "TMEM176A", "DNASE2", "TMEM176B", "LILRB4", "C2", "A2M", "AKR1B1", "C1QA", "C1QB", "LGMN"), 
                         OrgDb = "org.Hs.eg.db", 
                         keyType = "SYMBOL", ont = "BP",
                         pvalueCutoff = 0.05,
-                        qvalueCutoff = 0.05)
-
+                        qvalueCutoff = 0.05) 
 
 plot(barplot(GO_results_mac_APOE, showCategory =  c("complement activation, classical pathway",'complement activation, lectin pathway'
                                                     ,'humoral immune response','production of molecular mediator involved in inflammatory response',
                                                     "lipid storage", 'lipoprotein catabolic process'),
-             title = "Enriched Biological Processes (mac_APOE)", font.size = 13))
+             title = "Enriched Biological Processes (mac_APOE)", font.size = 13)) #Figure 2f.
 
 
 ### Figure 2h: Cell-cell communication analysis by CellChat:
