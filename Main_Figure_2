@@ -3,7 +3,7 @@ library(org.Hs.eg.db)
 library(enrichplot)
 library(enrichR)
 
-# Please pre-process the TCGA-BRCA data first:
+# Please pre-process the TCGA-BRCA data first, we only need to the bulk-RNA seq data from the basal-like breast cancer patients for correlation analysis/ survival analysis:
 
 #Figure 2b.
 
@@ -116,13 +116,29 @@ AverageHeatmap(object = myeloid_seurat_filtered_TNBC,
                markerGene = c("IGF1", "LYZ", "CSTB", "CTSD", "CTSZ", "CTSB", "CTSL", "CTSS",
                               "CALR", "CREG1", "NPC2", "CD63", "SDCBP", "PSAP", "SPP1"), cluster_columns = T)
 
-##### Figure 2I Speraman correlation analysis:
+##### Figure 2I Speramen correlation analysis:
+mac_APOE_refined_genes <- c('ADAMDEC1', 'ACP5', 'PLD3', 'LIPA', 'KCNMA1', 'GM2A', 'SCPEP1', 'SERPING1', 
+                            'APOE', 'TSPAN4', 'CTSC', 'TMEM176A', 'DNASE2', 
+                            'TMEM176B', 'LILRB4', 'C2', 'A2M', 'AKR1B1',
+                             'C1QA', 'C1QB', 'LGMN') ## genes obtained by comparing  mac_APOE signature of Wu et al. (2021) and that of Pal et al. (2021)
 
+mac_FABP5_refined_genes <- c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A1", "BRI3", "LHFPL2", 
+                             "GPNMB", "GM2A", "RNASE1", "TIMP2", "MSR1", "LAMP", "NUPR1", "FNIP2",
+                             "CTSD", "APOC1", "CSTB", "ACP5", "RALA") ## genes obtained by comparing  mac_FABP5 signature of Wu et al. (2021) and that of Pal et al. (2021)
 
+deg_list_spearmen_NFKB_pathway <-  list('mac_FABP5' = mac_FABP5_refined_genes, 'mac_APOE' = mac_APOE_refined_genes, "NFKB1" = c("NFKB1"),
+                         "NFKB2" = c("NFKB2"), "NFKBIA" = c("NFKBIA"), "NEMO" = c("IKBKG"),  "IKKα" = c("CHUK"), "IKKβ" = c("IKBKB")) 
 
+X=as.matrix(exprSet_basal)
+es.max_spearman_NF_KB_pathway<- gsva(X, deg_list_spearmen_NFKB_pathway, 
+                                  mx.diff=FALSE, verbose=T, 
+                                  parallel.sz=4)
 
+library(ComplexHeatmap)
+library(circlize)
 
-
+Heatmap(cor(as.matrix(df_spearmen), method = c('spearman')), border = T,
+        col = colorRamp2(c(-1,-0.5, 0,0.5, 1), c("blue","cornflowerblue", "white", "brown1","red3"))) ## this gives Figure 2i
 
 
 
