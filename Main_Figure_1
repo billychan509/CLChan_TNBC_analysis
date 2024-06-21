@@ -92,6 +92,7 @@ clusterCornerAxes(object = myeloid_seurat_filtered,
 
 # Figure 1g.
 
+
 mac_top50_LAM <- list('mac_APOE_TNBC_Wu et al.' = marker_cosg_wu$name$mac_APOE_TNBC, 
                       'mac_APOE_TNBC_Pal et al.' = marker_cosg$names$mac_APOE)
 
