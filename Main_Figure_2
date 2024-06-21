@@ -68,12 +68,43 @@ head(idents)
 
 cellchat <- createCellChat(NKT_CAF_myeloid_seurat_TNBC , group.by='ident')
 
-levels( cellchat@idents)
+levels(cellchat@idents)
 CellChatDB <- CellChatDB.human 
 showDatabaseCategory(CellChatDB)
 dplyr::glimpse(CellChatDB$interaction)
-# looking into the pathway names
-unique(CellChatDB$interaction$pathway_name)
+
+unique(CellChatDB$interaction$pathway_name) # looking into the pathway names
+
+# subset expression data:
+cellchat <- subsetData(cellchat) 
+
+#Identifying overexpressed receptor-ligand pairs 
+cellchat <- identifyOverExpressedGenes(cellchat)
+
+#Identifying overexpressed receptor-ligand interactins 
+cellchat <- identifyOverExpressedInteractions(cellchat)
+
+# Smoothening the expression value:
+cellchat <- projectData(cellchat, PPI.human)
+
+# Calculate communication probability
+cellchat <- computeCommunProb(cellchat, raw.use = TRUE)    
+
+# Filter communication patterns:
+cellchat <- filterCommunication(cellchat, min.cells = 10)
+
+#Computing the communication probability
+cellchat <- computeCommunProbPathway(cellchat)
+cellchat@netP
+
+### aggregate the communication network:
+cellchat <- aggregateNet(cellchat)
+groupSize <- as.numeric(table(cellchat@idents))
+
+netVisual_aggregate(cellchat, signaling = "MIF",
+                   targets.use= c("mac_FABP5_TNBC", "mac_APOE_TNBC"),
+                   sources.use = c("Mreg_TNBC", "CD4_Treg_TNBC","mCAF_TNBC"),
+                    remove.isolate = T, cell.order = T, thresh = 0.01) ### This will eventually gives the figure 2h
 
 
 
