@@ -29,7 +29,7 @@ for (x in file_name) {
   setwd(paste0("./", x))  # Set the working directory to the current directory 'x'
   
   # Read the matrix data using the appropriate function or code
-  zhang_bc.matrix <- ReadMtx(mtx = "counts.mtx.gz",
+  seurat_bc.matrix  <- ReadMtx(mtx = "counts.mtx.gz",
                        features = "feature.tsv.gz",
                        cells = "barcode.tsv.gz",
                        feature.column = 1)
