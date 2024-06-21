@@ -1,1 +1,283 @@
+# pre-processing of seurat objects:
 
+# LOADING required library
+library(Seurat)
+library(SeuratObject)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(harmony)
+library(scRNAtoolVis)
+library(VennDiagram)
+library(COSG)
+
+#1. Untar file in R:
+untar_file_name <- list.files(".")
+
+for (i in untar_file_name) {
+ untar(i)
+}
+
+# Get the list of directories in the working directory
+directories <- list.dirs(".", full.names = TRUE, recursive = FALSE)
+
+# Extract only the directory names using basename()
+file_name <- basename(directories)
+
+for (x in file_name) {
+  setwd(paste0("./", x))  # Set the working directory to the current directory 'x'
+  
+  # Read the matrix data using the appropriate function or code
+  zhang_bc.matrix <- ReadMtx(mtx = "counts.mtx.gz",
+                       features = "feature.tsv.gz",
+                       cells = "barcode.tsv.gz",
+                       feature.column = 1)
+  seurat_obj <- seurat_bc.matrix  %>% CreateSeuratObject()
+  assign(paste0(x,"_seurat_obj"),seurat_obj)
+  setwd("..")  # Move back to the parent directory
+}
+
+### Merging seurat obj of different patients:
+
+merged_seurat_obj <- merge(CID3586_seurat_obj, y = c(CID3838_seurat_obj,CID3921_seurat_obj,CID3941_seurat_obj,
+                                                     CID3946_seurat_obj,CID3948_seurat_obj,CID4040_seurat_obj,
+                                                     CID4067_seurat_obj,CID4290A_seurat_obj,CID44041_seurat_obj,
+                                                     CID4461_seurat_obj,CID4463_seurat_obj,CID4465_seurat_obj,
+                                                     CID4495_seurat_obj,CID44971_seurat_obj,CID44991_seurat_obj,
+                                                     CID4515_seurat_obj,CID45171_seurat_obj,CID4530N_seurat_obj))
+
+## assigning the clinical subtypes of breast cancer patients (Based on supp. table 1 of Wu et al. (2021)):
+
+merged_seurat_obj@meta.data$IHC[merged_seurat_obj@meta.data$orig.ident %in% c("CID3586", "CID3838", "CID3921", "CID45171")] <- "HER2"
+merged_seurat_obj@meta.data$IHC[merged_seurat_obj@meta.data$orig.ident %in% c("CID3941", "CID3948", "CID4040", "CID4067", "CID4290A", "CID4461", "CID4463", "CID4530N")] <- "ER"
+merged_seurat_obj@meta.data$IHC[merged_seurat_obj@meta.data$orig.ident %in% c("CID3946", "CID44041", "CID4465", "CID4495", "CID44971", "CID44991", "CID4515")] <- "TNBC"   
+merged_seurat_obj@meta.data$IHC[merged_seurat_obj@meta.data$orig.ident == "CID3586"] <- "HER2_or_ER"
+
+#Adding the patient id and barcode to the metadata:
+merged_seurat_obj@meta.data$sample <-rownames(merged_seurat_obj@meta.data)
+merged_seurat_obj@meta.data <- separate(merged_seurat_obj@meta.data, col = 'sample',
+                                        into = c('barcode', 'patient'), sep = '.', extra = 'drop')
+
+# calculate mitochondrial percentage
+merged_seurat_obj[["mitoPercent"]] <- PercentageFeatureSet(merged_seurat_obj, pattern = "^MT-")
+
+#Violin Plots :
+VlnPlot(merged_seurat_obj, features = c("nCount_RNA", "nFeature_RNA", "mitoPercent"),
+        ncol = 3, pt.size = 0)
+plot1 <- FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") +
+  geom_smooth (method = 'lm') 
+
+plot2 <-FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "mitoPercent") +
+  geom_smooth (method = 'lm') 
+plot1 + plot2
+
+#QC based on mitochondiral %
+merged_seurat_obj <- subset(merged_seurat_obj, subset = nCount_RNA > 200  &
+                              nFeature_RNA > 200 &
+                              mitoPercent < 20)
+all.genes <-row.names(merged_seurat_obj)
+
+merged_seurat_obj <- merged_seurat_obj %>%
+  NormalizeData() %>% 
+  FindVariableFeatures()  %>%
+  ScaleData() %>%
+  RunPCA()
+
+### Running Harmony to remove batch effects between patients
+merged_seurat_obj <- merged_seurat_obj %>% 
+  RunHarmony("barcode") # perform harmony
+
+harmony_embeddings <- Embeddings(merged_seurat_obj, 'harmony')
+harmony_embeddings[1:11, 1:11]
+
+#### use Elbow plot to check the number of dimensions:
+ElbowPlot(merged_seurat_obj , reduction='pca', ndims = 50)
+
+DimPlot(merged_seurat_obj , reduction = "pca", label = FALSE,
+        group.by = "patient")
+
+### RUN UMAP:
+merged_seurat_obj <- merged_seurat_obj %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.04) %>%
+  RunUMAP(dims = 1:50, reduction='pca')
+
+Idents(myeloid_chem_responder_seurat_all) <- "RNA_snn_res.0.04"
+
+DimPlot(myeloid_chem_responder_seurat_all, reduction = "umap", group.by = "RNA_snn_res.0.04", label = T) + 
+                     theme(legend.title=element_text(size=50, color="black")) 
+
+##########
+#Figure 1a.: Cartoon created with BioRender
+
+#Figure 1b.
+ jjDotPlot(object = merged_seurat_obj,
+            gene = c("JCHAIN","CD3D","NKG7","ACTA2","CD68","EPCAM","PECAM1","COL1A1","MS4A1","CD79A"),
+            rescale = T,
+            point.geom = T,
+            tile.geom = T,
+            xtree = T,
+            ytree = T,
+            id = "cell.type")
+
+#Figure 1c. 
+clusterCornerAxes(object = merged_seurat_obj,
+                  reduction = 'umap',
+                  clusterCol = "Tumor_Associated_Cells",
+                  noSplit = T,
+                  cellLabel = T,
+                  cellLabelSize = 3,
+                  show.legend = T,
+                  aspect.ratio = 1,
+                  themebg = 'bwCorner')
+
+clusterCornerAxes(object = merged_seurat_obj,
+                  reduction = 'umap',
+                  clusterCol = "IHC",
+                  noSplit = T,
+                  cellLabel = T,
+                  cellLabelSize = 3,
+                  show.legend = T,
+                  aspect.ratio = 1,
+                  themebg = 'bwCorner')
+
+#Figure 1d.
+Idents(merged_seurat_obj) <- "IHC"
+merged_seurat_obj_filtered <- subset(merged_seurat_obj, idents = c("HER2","ER","TNBC")) ## subsetting only "HER2","ER","TNBC"
+
+Idents(merged_seurat_obj_filtered) <- "IHC"
+
+table(merged_seurat_obj_filtered@meta.data$Tumor_Associated_Cells) 
+prop.table(table(Idents(merged_seurat_obj_filtered)))
+
+table(Idents(merged_seurat_obj_filtered), merged_seurat_obj_filtered@meta.data$Tumor_Associated_Cells) 
+Cellratio <- prop.table(table(Idents(merged_seurat_obj_filtered), merged_seurat_obj_filtered$Tumor_Associated_Cells), margin = 2)
+Cellratio <- as.data.frame(Cellratio)
+
+ggplot(Cellratio) + 
+  geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
+  theme_classic() +
+  labs(x='', y = 'Ratio', fill = "IHC", title = "", size = 20) +
+  scale_fill_manual(values = c("firebrick1",'dodgerblue2',"navy")) +
+  theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
+        axis.title.y = element_text(size = 16),
+        plot.title = element_text(hjust = 0.5))
+
+# Figure 1e. 
+
+jjDotPlot(object = myeloid_seurat_filtered,
+          gene = c('LAMP3',"IDO1","CCR7","BIRC3",
+                   'CD1C','CD1E',"CLEC10A",
+                   "MT1X","MT1E","MT1G",
+                   "S100A8","S100A9","FCN1","VCAN",
+                   "FABP5","APOC1","GM2A",
+                   "APOE","LGMN","C1QA","C1QB",
+                   'TREM2',
+                   "CCL3","CCL4","CCL3L3","CCL4L2",
+                   "TOP2A",'MKI67',"CENPF","GTSE1",
+                   "CXCL9","CXCL10"),
+          rescale = T,
+          point.geom = T,
+          tile.geom = T,
+          xtree = F,
+          ytree = F,
+          id = "subtype",
+          cluster.order = rev(c('mature DC', "cDc","Mreg","mono_S100A8","mac_FABP5","mac_APOE",'mac_TREM2',"mac_CCL3",'cmc',
+                            'mac_CXCL10',"unassigned#1","unassigned#2")),
+          dot.col = c("#0099CC","white", "red"))
+
+# Figure 1f.
+clusterCornerAxes(object = myeloid_seurat_filtered,
+                  reduction = 'umap',
+                  clusterCol  = 'Myeloid_cells',
+                  noSplit = T,
+                  cornerTextSize = 3.5,
+                  themebg = 'bwCorner',
+                  addCircle = F,
+                  cicAlpha = 0.2,
+                  nbin = 200)
+
+
+# Figure 1g.
+
+mac_top50_LAM <- list('mac_APOE_TNBC_Wu et al.' = marker_cosg_wu$name$mac_APOE_TNBC, 
+                      'mac_APOE_TNBC_Pal et al.' = marker_cosg$names$mac_APOE)
+
+
+
+# Figure 1h.
+Idents(myeloid_seurat_filtered) <- "IHC"
+table(myeloid_seurat_filtered@meta.data$subtype) 
+prop.table(table(Idents(myeloid_seurat_filtered)))
+table(Idents(myeloid_seurat_filtered), myeloid_seurat_filtered@meta.data$subtype)
+Cellratio <- prop.table(table(Idents(myeloid_seurat_filtered), myeloid_seurat_filtered$subtype), margin = 2)
+Cellratio <- as.data.frame(Cellratio)
+
+ggplot(Cellratio) + 
+  geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
+  theme_classic() +
+  labs(x='', y = 'Ratio', fill = "Clinical Subtypes", title = "", size = 20) +
+  scale_fill_manual(values = c("firebrick1",'dodgerblue2',"navy")) +
+  theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
+        axis.title.y = element_text(size = 16),
+        plot.title = element_text(hjust = 0.5))
+
+# Figure 1j.
+jjDotPlot(object = NK_T_cells_seurat,
+          gene = c("XCL2","GZMA","GZMK","LAG3","CCR7","SELL","IL7R","KLRC1",
+                   "KLRB1","NKG7","FCGR3A","TRDC","TRGC1","IFIT1","IFIT2","IFIT3",
+                   "TRAC","TRBC1","TRBC2","FOXP3","IL21","CXCL13"),
+          rescale = T,
+          point.geom = T,
+          tile.geom = T,
+          xtree = F,
+          ytree = F,
+          id = "NKT_cells_and_T_cells",
+          cluster.order = rev(c("XCL2_CD8_T_cell",'GZMK_CD8_T_cell',"LAG3_CD8_T_cell",
+                            "Central_Mem_T","NKT_cells","IFIT_T_cell","alpha/beta_T_cells",
+                            "CD4_Treg","CXCL13_T_cell")),
+          dot.col = c("#0099CC","white", "red"))
+
+#Figure 1k:
+clusterCornerAxes(object = NK_T_cells_seurat,
+                  reduction = 'umap',
+                  clusterCol  = 'NKT_cells_and_T_cells',
+                  noSplit = T,
+                  cornerTextSize = 3.5,
+                  themebg = 'bwCorner',
+                  addCircle = F,
+                  cicAlpha = 0.2,
+                  nbin = 200)
+
+# Figure 1L:
+jjDotPlot(object = CAF_seurat_filtered,
+          gene = c("ELN","POSTN","COMP",
+                   "CXCL9","CXCL10","CXCL11","IL32",
+                   "C1R","C1S","C3","CFD","PLA2G2A",
+                   "COL5A2","COL3A1","COL12A1","COL8A1","COL11A1","COL1A2",'MMP11',
+                   "CXCL9","CXCL10","CXCL11","IL32",
+                   "SOX4","CPE","SEMA5A","EDNRB",'DDX3X',"TCF7L2"),
+          rescale = T,
+          point.geom = T,
+          tile.geom = T,
+          xtree = F,
+          ytree = F,
+          id = "subtype",
+          cluster.order = ,
+          dot.col = c("#0099CC","white", "red"))
+
+#Figure 1m:
+CAF_seurat_filtered@meta.data$CAFs <- CAF_seurat_filtered@meta.data$subtype
+
+clusterCornerAxes(object = CAF_seurat_filtered,
+                  reduction = 'umap',
+                  clusterCol  = 'CAFs',
+                  noSplit = T,
+                  cornerTextSize = 3.5,
+                  themebg = 'bwCorner',
+                  addCircle = F,
+                  cicAlpha = 0.2,
+                  nbin = 200)
