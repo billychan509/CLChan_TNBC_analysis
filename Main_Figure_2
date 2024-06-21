@@ -8,6 +8,20 @@ library(enrichR)
 
 library(ggpubr)
 
+X=as.matrix(exprSet_basal)
+es.max_spearman_spearman_lipid_mac <- gsva(X, deg_list_spearmen_NFKB_pathway, 
+                                  mx.diff=FALSE, verbose=T, 
+                                  parallel.sz=4)
+
+mac_Inflammation_genes <- c("CCL11", "IFNG", "CCL3", "CCL4", "IL1B", "TNF", "IL1R2", "CD80",
+                             "CD86", "TLR2", "HIF1A", "CSF2", "IL6", "CCL2", "CCL8", "CCL5", "CD68", "IRF5", "TLR4") ## adopted from Zhang et al. (2021)
+
+df_spearmen = data_frame("mac_APOE_TNBC" = es.max_spearman$mac_APOE,
+                "mac_FABP5_TNBC" = es.max_spearman$mac_FABP5,
+                 "macrophage_inflammation_signature" = es.max_spearman$mac_inflammation)
+
+
+
 ggscatter(df_spearmen, y = 'Phagocytosis signature', x = "FOLR2_signature",
           color = "black", shape = 21, size = 3.5, # Points color, shape and size
           add = "reg.line",  # Add regression line
