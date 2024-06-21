@@ -46,7 +46,7 @@ Group = ifelse(as.numeric(str_sub(colnames(exp),14,15)) < 10,'tumor','normal')
 Group = factor(Group,levels = c("normal","tumor"))
 print(table(Group))
 
-# 生存分析只需要tumor样品即可
+# Only need the tumor sample for survival analysus
 exprSet = exp[,Group=='tumor']
 
 
@@ -61,7 +61,7 @@ head(meta[,1:4])
 tail(meta[,1:4]) 
 print(dim(meta))
 
-#去掉生存信息不全或者生存时间小于30天的样本，样本纳排标准不唯一，且差别很大.
+#remove patients with incomplete survival info / survival days < 30 
 k1 = meta$OS.time >= 30
 k2 = !(is.na(meta$OS.time)|is.na(meta$OS))
 meta = meta[k1&k2,]
@@ -94,7 +94,7 @@ proj='TCGA-BRCA'
 load(file = paste0(proj,".for_survival.rdata"))
 
 # 1. prepare data for coxph----
-## 批量生存分析使用coxph回归方法 
+## Cox regression for survival analysis 
 exprSet[1:4,1:4]
 phe=meta
 head(phe)
