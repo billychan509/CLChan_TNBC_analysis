@@ -142,10 +142,11 @@ save(cox_results,
 
 
 ### Extracting only the basal-like breast cancer patients from the TCGA-BRCA cohort (Since we are studying the TNBC):
-
+library(readxl)
+clinical_info_TCGA_data <- read_excel("clinical_info_TCGA_data.xlsx")
 TCGA_id_basal <- clinical_info_TCGA_data[clinical_info_TCGA_data$Subtype == "Basal", "Patient ID"]
 
- #TCGA_id_basal <- as.vector(TCGA_id_basal)
+TCGA_id_basal <- as.vector(TCGA_id_basal)
  
  TCGA_cancer_type_basal = clinical_info_TCGA_data[clinical_info_TCGA_data$Subtype == "Basal", "Cancer Type"]
  TCGA_cancer_type_basal[TCGA_cancer_type_basal == "IDC"] <- "Invasive Ductal Carcinoma"
@@ -155,8 +156,7 @@ TCGA_id_basal <- clinical_info_TCGA_data[clinical_info_TCGA_data$Subtype == "Bas
 TCGA_basal_clinical_info <- cbind(TCGA_id_basal, TCGA_cancer_type_basal) ## Combining useful clinical info. into a dataframe
  
 TCGA_basal_clinical_info <- TCGA_basal_clinical_info[!duplicated(TCGA_basal_clinical_info$`Patient ID`), ] ## filter out the repeated patient ID
-
-rownames(TCGA_basal_clinical_info) <- TCGA_basal_clinical_info$`Patient ID`
+rownames(TCGA_basal_clinical_info) <- TCGA_basal_clinical_info$`Patient ID` ## assigning patient ID to the rowname of the dataframe
 
 colnames(exprSet) <- gsub("-01A","", colnames(exprSet))
 colnames(exprSet) <- gsub("-01B","", colnames(exprSet))
