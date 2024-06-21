@@ -96,6 +96,33 @@ clusterCornerAxes(object = myeloid_seurat_filtered,
 mac_top50_LAM <- list('mac_APOE_TNBC_Wu et al.' = marker_cosg_wu$name$mac_APOE_TNBC, 
                       'mac_APOE_TNBC_Pal et al.' = marker_cosg$names$mac_APOE)
 
+venn.diagram(x= testing,
+             scaled = T,
+             alpha= 0.5,
+             #col= c("#3498db", "#f1c40f", "#e74c3c", "#2ecc71"), 
+             col= c("#e74c3c", "#2ecc71"),
+             label.col ='black' , 
+             cex = 5, # 数字大小
+             #fontface = "bold", 
+             #fill= c("#3498db", "#f1c40f","#e74c3c", "#2ecc71"),
+             fill= c( "#e74c3c", "#2ecc71"),
+             category.names = c('mac_APOE_TNBC_Bal et al.','mac_APOE_TNBC_Wu et al.'),
+             cat.dist = 0.025,
+             #cat.pos = c(-140,170,320), 
+             cat.pos = c(-20,20),
+             cat.cex = 3.5, 
+             cat.col='black' , 
+             cat.default.pos = "outer",  
+             output=TRUE,
+             filename='myeloid_subtypes_venn_diagram.png',
+             imagetype="png",  # 类型（tiff png svg）
+             resolution = 400,  # 分辨率
+             cat.fontfamily = 3,
+             fontfamily = 3,
+             compression = "lzw",
+             width = 7500,
+             height = 7500,
+             print.mode	= c("raw","percent")) 
 
 
 # Figure 1h.
