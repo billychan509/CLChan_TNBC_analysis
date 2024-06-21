@@ -162,9 +162,10 @@ colnames(exprSet) <- gsub("-01A","", colnames(exprSet))
 colnames(exprSet) <- gsub("-01B","", colnames(exprSet))
 colnames(exprSet) <- gsub("-01C","", colnames(exprSet))
 colnames(exprSet) <- gsub("-06A","", colnames(exprSet))
- exprSet <- as.data.frame(exprSet)
+exprSet <- as.data.frame(exprSet)
  
- exprSet_basal <- subset(exprSet, select = TCGA_basal_clinical_info$`Patient ID`)
+exprSet_basal <- subset(exprSet, select = TCGA_basal_clinical_info$`Patient ID`) ### extract the expresion data for the basal-like breast cancer patients only (n = 143)
+
 
 
 
