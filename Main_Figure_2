@@ -3,6 +3,8 @@ library(org.Hs.eg.db)
 library(enrichplot)
 library(enrichR)
 
+# Please pre-process the TCGA-BRCA data first:
+
 #Figure 2b.
 
 
@@ -106,8 +108,6 @@ netVisual_aggregate(cellchat, signaling = "MIF",
                    sources.use = c("Mreg_TNBC", "CD4_Treg_TNBC","mCAF_TNBC"),
                     remove.isolate = T, cell.order = T, thresh = 0.01) ### This will eventually gives the figure 2h
 
-
-
 ####Figure 2g.
 Idents(myeloid_seurat_filtered) <- "IHC"
 myeloid_seurat_filtered_TNBC <- subset(myeloid_seurat_filtered, idents = "TNBC")
@@ -116,7 +116,7 @@ AverageHeatmap(object = myeloid_seurat_filtered_TNBC,
                markerGene = c("IGF1", "LYZ", "CSTB", "CTSD", "CTSZ", "CTSB", "CTSL", "CTSS",
                               "CALR", "CREG1", "NPC2", "CD63", "SDCBP", "PSAP", "SPP1"), cluster_columns = T)
 
-
+##### Figure 2I Speraman correlation analysis:
 
 
 
