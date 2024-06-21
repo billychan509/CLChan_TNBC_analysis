@@ -90,7 +90,29 @@ clusterCornerAxes(object = myeloid_seurat_filtered,
                   nbin = 200)
 
 
-# Figure 1g.
+# Figure 1g. Venn Diagram:
+
+setwd("./GSE161529)
+file_name_Pal <- basename(list.dirs())
+
+for (x in file_name_Pal) {
+  setwd(paste0("./", x))  # Set the working directory to the current directory 'x'
+  
+  # Read the matrix data using the appropriate function or code
+  Pal_seurat_bc.matrix  <- ReadMtx(mtx = "counts.mtx.gz",
+                       features = "feature.tsv.gz",
+                       cells = "barcode.tsv.gz",
+                       feature.column = 1)
+  seurat_obj <- Pal_seurat_bc.matrix  %>% CreateSeuratObject()
+  assign(paste0(x,"_seurat_obj"),seurat_obj)
+  setwd("..")  # Move back to the parent directory
+}
+
+### Merging seurat obj of different patients (Pal et al. (2021)):
+
+merged_seurat_obj_Pal <- merge(GSM4909281_seurat_obj,c(GSM4909282_seurat_obj,GSM4909283_seurat_obj,GSM4909284_seurat_obj,
+                      GSM4909285_seurat_obj,GSM4909286_seurat_obj,GSM4909287_seurat_obj,GSM4909288_seurat_obj))
+
 
 
 mac_top50_LAM <- list('mac_APOE_TNBC_Wu et al.' = marker_cosg_wu$name$mac_APOE_TNBC, 
