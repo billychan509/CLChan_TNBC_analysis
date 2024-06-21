@@ -139,3 +139,33 @@ table(cox_results[,4]<0.01)
 table(cox_results[,4]<0.05) 
 save(cox_results, 
      file = 'batch_cox_results_basal.Rdata')
+
+
+### Extracting only the basal-like breast cancer patients from the TCGA-BRCA cohort (Since we are studying the TNBC):
+
+TCGA_id_basal <- clinical_info_TCGA_data[clinical_info_TCGA_data$Subtype == "Basal", "Patient ID"]
+
+ #TCGA_id_basal <- as.vector(TCGA_id_basal)
+ 
+ TCGA_cancer_type_basal = clinical_info_TCGA_data[clinical_info_TCGA_data$Subtype == "Basal", "Cancer Type"]
+ TCGA_cancer_type_basal[TCGA_cancer_type_basal == "IDC"] <- "Invasive Ductal Carcinoma"
+ TCGA_cancer_type_basal[TCGA_cancer_type_basal == "ILC"] <- "Invasive Lobular Carcinoma"
+
+ 
+TCGA_basal_clinical_info <- cbind(TCGA_id_basal, TCGA_cancer_type_basal) ## Combining useful clinical info. into a dataframe
+ 
+TCGA_basal_clinical_info <- TCGA_basal_clinical_info[!duplicated(TCGA_basal_clinical_info$`Patient ID`), ] ## filter out the repeated patient ID
+
+rownames(TCGA_basal_clinical_info) <- TCGA_basal_clinical_info$`Patient ID`
+
+colnames(exprSet) <- gsub("-01A","", colnames(exprSet))
+colnames(exprSet) <- gsub("-01B","", colnames(exprSet))
+colnames(exprSet) <- gsub("-01C","", colnames(exprSet))
+colnames(exprSet) <- gsub("-06A","", colnames(exprSet))
+ exprSet <- as.data.frame(exprSet)
+ 
+ exprSet_basal <- subset(exprSet, select = TCGA_basal_clinical_info$`Patient ID`)
+
+
+
+
