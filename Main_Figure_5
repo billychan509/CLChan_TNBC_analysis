@@ -1,1 +1,20 @@
+table(myeloid_combination_therapy_responder_seurat@meta.data$myeloids_subclusters) 
 
+prop.table(table(Idents(myeloid_combination_therapy_responder_seurat)))
+table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state) #各组不同细胞群细胞数
+
+Cellratio <- prop.table(table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2)#计算各组样本不同细胞群比例
+Cellratio <- as.data.frame(Cellratio)
+
+Cellratio_sorted <- Cellratio[c(3, 4, 1, 2),]
+rownames(Cellratio_sorted) <- c(1,2,3,4)
+
+library(ggplot2)
+ggplot(Cellratio_sorted) + 
+  geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
+  theme_classic() +
+  labs(x='', y = 'Ratio', fill = "myeloid subtypes", size = 20) +
+  scale_fill_manual(values = c("firebrick1",'dodgerblue')) +
+  theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
+        axis.title.y = element_text(size = 16))
