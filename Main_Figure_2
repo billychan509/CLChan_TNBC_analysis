@@ -191,7 +191,8 @@ Heatmap(cor(as.matrix(df_spearmen_NFKB), method = c('spearman')), border = T,
         col = colorRamp2(c(-1,-0.5, 0,0.5, 1), c("blue","cornflowerblue", "white", "brown1","red3"))) ## this gives Figure 2i
 
 
-
+### Figure 2j:
+# created by BioRender 
 
 
 
