@@ -3,6 +3,7 @@ library(scRNAtoolVis)
 library(grid)
 library(UCell)
 library(GSVA)
+library(CellChat)
 
 ## Pre-processing of scRNA seq data of Wu et al. (2021) is needed before printing the Figure 3a - 3d
 
@@ -196,11 +197,14 @@ wilcox.test(df_spearmen$EOMES[df_spearmen$mac_APOE_TNBC_classification == 'mac_A
 
 ## Figure 3k
 ## To print this figure, you will need to conduct Cell-cell communication analysis with CellChat beforehand!!!!!
-
+netVisual_bubble(cellchat,
+                signaling = "MHC-I",
+                sources.use = c("mac_FABP5_TNBC", "mac_APOE_TNBC"),
+                targets.use   = c("XCL2_CD8_T_cell_TNBC", "LAG3_CD8_T_cell_TNBC","GZMK_CD8_T_cell_TNBC"),
+                 remove.isolate = T, thresh = 0.05, font.size = 10)
 
 ## Figure 3l:
-# No code provided since it is created with BioRender
-
+# No code has been provided for this figure since it was created with BioRender.
 
 
 
