@@ -102,7 +102,7 @@ for(comm_type in comm_list){
                           "#FFFFF0", "#DC143C", "#00FFFF")
   ,link.arr.type = NULL)
   title(comm_type)
-  res<-rbind(res,res_cat)}
+  res<-rbind(res,res_cat)} ### Obtain the LR Plot for checkpoint for Figure .4c
 
 # Figure 4d:
 Idents(epithelial_cell_seurat_filtered) <- "IHC"
