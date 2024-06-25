@@ -18,6 +18,10 @@ library(iTALK)
 
 
 # Figure 4d:
+Idents(epithelial_cell_seurat_filtered) <- "IHC"
+DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", split.by = "ploidy",
+        label = F, repel = T) + theme(text = element_text(face="bold")) +
+  theme(legend.title=element_text(size=50, color="black")) 
 
 
 # Figure 4e:
@@ -27,7 +31,7 @@ DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", group.by = "ploidy_
 
 
 # Figure 4f - 4h:
- 
+FeaturePlot(epithelial_cell_seurat, features = "CD24", split.by = "IHC", cols = c('gray',"firebrick3"))
 
 
 # Figure 4i:
