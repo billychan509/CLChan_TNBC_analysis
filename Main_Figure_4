@@ -91,7 +91,7 @@ for (i in names(deg_list_spearmen_Fig_4) ) {
 } ### Obtain the KM survival plot of SIGLEC10 for Figure 4b
 
 # Figure 4c:
-
+## use iTalk to conduct cell-cell communication analysis first !
 for(comm_type in comm_list){
   res_cat<-FindLR(highly_exprs_genes,datatype='mean count',comm_type = comm_type)
   res_cat<-res_cat[order(res_cat$cell_from_mean_exprs*res_cat$cell_to_mean_exprs,decreasing=T),]
