@@ -1,5 +1,8 @@
 library(Seurat)
 library(scRNAtoolVis)
+library(grid)
+library(UCell)
+
 
 # Figure 3a
 AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
@@ -35,12 +38,23 @@ AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
 
 # Figure 3c:
 
+NK_T_cells_seurat_CD8_T_cell <- AddModuleScore_UCell(NK_T_cells_seurat_CD8_T_cell,
+                                   features = list(c("CTLA4","PDCD1","TIGIT","HAVCR2","LAYN","LAG3")))
+view(NK_T_cells_seurat_CD8_T_cell@meta.data) ## check the column no. that correspondes to the  column with the name 'signature1_Ucell'
 
+
+FeaturePlot(NK_T_cells_seurat_CD8_T_cell,
+            features = "T_cell_immunosuppression",  
+            cols = c("grey", "firebrick1"), split.by = "IHC")
 # Figure 3d:
+FeaturePlot(NK_T_cells_seurat_CD8_T_cell,
+            features = "T_cell_immunosuppression",  
+            cols = c("grey", "firebrick1"), split.by = "IHC")
+# Figure 3e:
 
+# Figure 3f:
 
-
-
+# Figure 3g:
 
 
 
