@@ -1,3 +1,8 @@
+## Figure 5a:
+# No code has been provided for this figure since it was created with BioRender.
+
+
+
 table(myeloid_combination_therapy_responder_seurat@meta.data$myeloids_subclusters) 
 
 prop.table(table(Idents(myeloid_combination_therapy_responder_seurat)))
