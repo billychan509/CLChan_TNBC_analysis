@@ -1,0 +1,27 @@
+# Communication analysis using iTalk:
+
+library(iTALK)
+library(Seurat)
+library(Matrix)
+library(dplyr)
+
+epithelial_cell_seurat_filtered@meta.data$subtype <- epithelial_cell_seurat_filtered@meta.data$ploidy
+
+testing <- merge(myeloid_seurat_filtered, y = c(epithelial_cell_seurat_filtered))
+
+testing@meta.data$subtype %>% unique() %>% print() # Checking if it contains all the subtypes of cells
+
+testing_TNBC <- subset(testing, idents = "TNBC")
+testing_TNBC@meta.data[testing_TNBC@meta.data$subtype == "unassigned_1", 'subtype'] <- 'U1'
+testing_TNBC@meta.data[testing_TNBC@meta.data$subtype == "unassigned_2", 'subtype'] <- 'U2'
+
+exp_1 <- as.data.frame(t(testing_TNBC[["RNA"]]$counts.1))
+exp_2 <- as.data.frame(t(testing_TNBC[["RNA"]]$counts.2))
+exp <- rbind(exp_1,exp_2)
+
+exp$cell_type <- testing_TNBC@meta.data$subtype
+exp$compare_group <- testing_TNBC@meta.data$IHC
+length(unique(testing_TNBC$subtype))
+
+
+highly_exprs_genes <- rawParse(exp,top_genes=50,stats='mean')
