@@ -1,0 +1,55 @@
+#CNV analysis using copykat package  (Gao et al., 2021)
+## code used in this analysis was modified from https://github.com/navinlabcode/copykat
+## Warning: This step is highly computationally demanding!!
+
+Idents(epithelial_cell_seurat) <- "orig.ident"  ### we only conduceted CNV analysis of the epithelial cells (EPCAM+)
+
+for (i in (epithelial_cell_seurat@meta.data$orig.ident %>% unique())){
+
+epithelial_cell_raw_for_loop_seurat <- subset(epithelial_cell_seurat, idents = i)
+exp.rawdata  <- as.matrix(epithelial_cell_raw_for_loop_seurat[["RNA"]]$counts) 
+
+copykat.test <- copykat(rawmat=exp.rawdata, id.type="S", ngene.chr=10, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", 
+                        norm.cell.names="",output.seg="FALSE",
+                        genome="hg20",n.cores=4, plot.genes = T, LOW.DR = 0.05, UP.DR = 0.2)
+
+assign(paste0("copykat.test_",i), copykat.test)
+
+pred.test <- data.frame(copykat.test$prediction)
+
+assign(paste0("pred.test_",i), pred.test)}
+
+
+
+Idents(epithelial_cell_seurat) = "ploidy"
+
+epithelial_cell_seurat_aneuploid <- subset(epithelial_cell_seurat, idents = "aneuploid")
+epithelial_cell_seurat_aneuploid$ploidy <- "aneuploid_epithelial"
+epithelial_cell_seurat_aneuploid$subtype<- epithelial_cell_seurat_aneuploid$ploidy
+
+epithelial_cell_seurat <- subset(epithelial_cell_seurat, ident = (epithelial_cell_seurat@meta.data$ploidy %>% unique()))
+
+#$ Combine the data frames using rbind and cbind:
+combined_df_ploidy <- rbind(pred.test_CID3586, pred.test_CID3838, pred.test_CID3921, pred.test_CID3941,pred.test_CID3948, pred.test_CID4040,
+                            pred.test_CID4067, pred.test_CID4290A, pred.test_CID44041, pred.test_CID4461, pred.test_CID4463, pred.test_CID4465,
+                            pred.test_CID4495, pred.test_CID44971, pred.test_CID44991, pred.test_CID4515, 
+                            pred.test_CID45171, pred.test_CID4530N)
+
+combined_copykat.test$prediction <- rbind(copykat.test_CID3838$prediction, copykat.test_CID3921$prediction, copykat.test_CID3941$prediction,
+  copykat.test_CID3948$prediction, copykat.test_CID4040$prediction, copykat.test_CID4067$prediction,
+  copykat.test_CID4290A$prediction, copykat.test_CID44041$prediction, copykat.test_CID4461$prediction,
+  copykat.test_CID4463$prediction, copykat.test_CID4465$prediction, copykat.test_CID4495$prediction,
+  copykat.test_CID44971$prediction, copykat.test_CID44991$prediction, copykat.test_CID4515$prediction,
+  copykat.test_CID45171$prediction, copykat.test_CID4530N$prediction) 
+
+combined_copykat.test$CNAmat <- cbind(copykat.test_CID3838$CNAmat, copykat.test_CID3921$CNAmat, copykat.test_CID3941$CNAmat,
+                                          copykat.test_CID3948$CNAmat, copykat.test_CID4040$CNAmat, copykat.test_CID4067$CNAmat,
+                                          copykat.test_CID4290A$CNAmat, copykat.test_CID44041$CNAmat, copykat.test_CID4461$CNAmat,
+                                          copykat.test_CID4463$CNAmat, copykat.test_CID4465$CNAmat, copykat.test_CID4495$CNAmat,
+                                          copykat.test_CID44971$CNAmat, copykat.test_CID44991$CNAmat, copykat.test_CID4515$CNAmat,
+                                          copykat.test_CID45171$CNAmat, copykat.test_CID4530N$CNAmat) 
+
+
+
+
+
