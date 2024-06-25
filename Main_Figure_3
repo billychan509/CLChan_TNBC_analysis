@@ -1,6 +1,42 @@
+library(Seurat)
+library(scRNAtoolVis)
+
+# Figure 3a
+AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
+               markerGene = c("CTLA4","PDCD1","TIGIT","HAVCR2","LAYN","LAG3"),
+               clusterAnnoName = T,
+               showRowNames = T,
+               row_title = "T-cell immunecheckpoints",
+               column_names_rot = 90,
+               column_names_gp = gpar(fontsize = 12),
+               group.by = "ident",
+               cluster_columns = T,
+               cluster_rows = F,
+               fontsize = 15,
+               border = T,
+               htRange = c(-2, 0, 2),
+               htCol = c("blue","white","red2"))
+
+#Figure 3b
+AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
+               markerGene = c("IL2", "TNF","CD44","IFNG"),
+               clusterAnnoName = T,
+               showRowNames = T,
+               row_title = "T-cell immunecheckpoints",
+               column_names_rot = 90,
+               column_names_gp = gpar(fontsize = 12),
+               group.by = "ident",
+               cluster_columns = T,
+               cluster_rows = F,
+               fontsize = 15,
+               border = T,
+               htRange = c(-2, 0, 2),
+               htCol = c("blue","white","red2"))
+
+# Figure 3c:
 
 
-
+# Figure 3d:
 
 
 
