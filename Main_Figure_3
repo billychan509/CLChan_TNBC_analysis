@@ -194,7 +194,12 @@ wilcox.test(df_spearmen$`TOX`[df_spearmen$mac_APOE_TNBC_classification == 'mac_A
 wilcox.test(df_spearmen$EOMES[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC High'],
             df_spearmen$EOMES[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC Low'])
 
+## Figure 3k
+## To print this figure, you will need to conduct Cell-cell communication analysis with CellChat beforehand!!!!!
 
+
+## Figure 3l:
+# No code provided since it is created with BioRender
 
 
 
