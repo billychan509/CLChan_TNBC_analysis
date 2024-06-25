@@ -34,11 +34,25 @@ showDatabaseCategory(CellChatDB)
 
 CellChatDB.ss <- subsetDB(CellChatDB, search = c("Cell-Cell Contact","ECM-Receptor","Secreted Signaling"), 
                           key='annotation')
-
 # Subsetting the data
 cellchat <- subsetData(cellchat) 
 
 # Identifying over-expressed genes 
 cellchat <- identifyOverExpressedGenes(cellchat)
 
-##
+# Remove the effect of dropout:
+cellchat <- projectData(cellchat, PPI.human)
+
+##  Computation of the communication probabilities between cells 
+cellchat <- computeCommunProb(cellchat, raw.use = TRUE)    
+
+##  Filtering the cells if there is very low quantity of cells between different samples
+cellchat <- filterCommunication(cellchat, min.cells = 10)
+
+## Computation of the communication probabilty in terms of the signaling pathway
+cellchat <- computeCommunProbPathway(cellchat)
+
+### Aggregation of communication network:
+cellchat <- aggregateNet(cellchat)
+
+
