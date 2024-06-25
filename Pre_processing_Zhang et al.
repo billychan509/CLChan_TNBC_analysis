@@ -81,4 +81,14 @@ zhang_pre_t_seurat_obj@meta.data$treatment_response <- paste0(zhang_pre_t_seurat
 zhang_post_t_seurat_obj@meta.data$treatment_response <- paste0(zhang_post_t_seurat_obj@meta.data$treatment,"_",zhang_post_t_seurat_obj@meta.data$therapy_response)
 
 
+#########. Non-responders' scRNA seq data:
+Idents(zhang_pre_t_seurat_obj) <- "patient"
+non_responder_pre_myeloid_t_combination_therapy_seurat <- subset(zhang_pre_t_seurat_obj,
+                                                                 ident = c('Pre_P017_t','Pre_P002_t','Pre_P004_t','Pre_P005_t','Pre_P016_t'))
+Idents(zhang_post_t_seurat_obj) <- "patient"
+non_responder_post_myeloid_t_combination_therapy_seurat <- subset(zhang_post_t_seurat_obj, 
+                                                                  ident = c('Post_P017_t','Post_P002_t','Post_P005_t','Post_P016_t'))
+
+non_responder_all_myeloid_t_combination_therapy_seurat <- merge(non_responder_post_myeloid_t_combination_therapy_seurat, 
+                                                                non_responder_pre_myeloid_t_combination_therapy_seurat)
 
