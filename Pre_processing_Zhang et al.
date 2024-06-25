@@ -1,0 +1,84 @@
+library(Seurat)
+library(scRNAtoolVis)
+library(ggplot2)
+library(tidyverse)
+
+### Loading the scRNA seq data of zhang et al. (2021)
+zhang_bc.matrix <- ReadMtx(mtx = "GSE169246_TNBC_RNA.counts.mtx.gz",
+                       features = "GSE169246_TNBC_RNA.feature.tsv.gz",
+                       cells = "GSE169246_TNBC_RNA.barcode.tsv.gz",
+                       feature.column = 1)
+  zhang_seurat_obj <- zhang_bc.matrix  %>% CreateSeuratObject()
+
+
+## Assigning the clinical information to metadata:
+
+
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P003_t', 'therapy_response'] <- "PD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P012_t', 'therapy_response'] <- "PR"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P023_t', 'therapy_response'] <- "SD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P013_t', 'therapy_response'] <- "PR"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P002_t', 'therapy_response'] <- "SD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P018_t', 'therapy_response'] <- "SD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P016_t', 'therapy_response'] <- "SD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P025_t', 'therapy_response'] <- "SD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P022_t', 'therapy_response'] <- "PR"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P019_t', 'therapy_response'] <- "PR"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P020_t', 'therapy_response'] <- "PR"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P017_t', 'therapy_response'] <- "SD"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P005_t', 'therapy_response'] <- "SD"
+
+######
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P007_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P012_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P023_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P013_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P002_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P018_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P016_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P025_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P022_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P019_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P020_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P010_t', 'therapy_response'] <- "PR"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P017_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P005_t', 'therapy_response'] <- "SD"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P004_t', 'therapy_response'] <- "SD"
+
+####
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P003_t', 'treatment'] <- "Paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P012_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P023_t', 'treatment'] <- "paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P013_t', 'treatment'] <- "paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P002_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P018_t', 'treatment'] <- "paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P016_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P025_t', 'treatment'] <- "paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P022_t', 'treatment'] <- "paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P019_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P020_t', 'treatment'] <- "paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P017_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_post_t_seurat_obj@meta.data[zhang_post_t_seurat_obj@meta.data$patient == 'Post_P005_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+
+######
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P007_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P012_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P023_t', 'treatment'] <- "paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P013_t', 'treatment'] <- "paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P002_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P018_t', 'treatment'] <- "paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P016_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P025_t', 'treatment'] <- "paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P022_t', 'treatment'] <- "paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P019_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P020_t', 'treatment'] <- "paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P010_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P017_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P005_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pre_P004_t', 'treatment'] <- "Anti-PD-L1+ paclitaxel"
+
+zhang_pre_t_seurat_obj@meta.data$treatment_response <- paste0(zhang_pre_t_seurat_obj@meta.data$treatment,"_",zhang_pre_t_seurat_obj@meta.data$therapy_response)
+zhang_post_t_seurat_obj@meta.data$treatment_response <- paste0(zhang_post_t_seurat_obj@meta.data$treatment,"_",zhang_post_t_seurat_obj@meta.data$therapy_response)
+
+
+
