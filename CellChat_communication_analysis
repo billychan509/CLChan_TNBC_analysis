@@ -1,1 +1,44 @@
-# Cell-cell communication analysis 
+# Cell-cell communication analysis using CellChat:
+## Codes used in the analysis  are modified from the code provided at https://zhilongjia.github.io/scRNA/cellchat.html
+library(CellChat)
+library(Seurat)
+library(NMF)
+library(ggalluvial)
+
+### Merging the Seurat objects that contain diff. subtypes of tumor-associated cells:
+NKT_CAF_myeloid_seurat <- merge(NK_T_cells_seurat, y = c(myeloid_seurat_filtered, CAF_seurat_filtered))
+
+NKT_CAF_myeloid_seurat@meta.data$subtype_IHC <- paste0(NKT_CAF_myeloid_seurat@meta.data$subtype,"_",NKT_CAF_myeloid_seurat@meta.data$IHC)
+
+### Check the identities of the cells type
+unique(NKT_CAF_myeloid_seurat@meta.data$subtype_IHC)
+
+### Subsetting ONLY the cells derived from the TNBC tumor:
+NKT_CAF_myeloid_seurat <- JoinLayers(NKT_CAF_myeloid_seurat)
+Idents(NKT_CAF_myeloid_seurat_TNBC) <- "IHC"
+NKT_CAF_myeloid_seurat_TNBC <- subset(NKT_CAF_myeloid_seurat, idents = "TNBC")
+
+## Changing the ident of the tumor-associated cells 
+Idents(NKT_CAF_myeloid_seurat_TNBC) = "subtype_IHC"
+
+## 2. Creation of CellChat object 
+cellchat <- createCellChat( NKT_CAF_myeloid_seurat_TNBC , group.by='ident')
+
+levels( cellchat@idents )
+
+## Adding the human database of L-R interactions
+CellChatDB <- CellChatDB.human # use CellChatDB.mouse if running on mouse data
+showDatabaseCategory(CellChatDB)
+
+##unique(CellChatDB$interaction$pathway_name) ### Check pathway names 
+
+CellChatDB.ss <- subsetDB(CellChatDB, search = c("Cell-Cell Contact","ECM-Receptor","Secreted Signaling"), 
+                          key='annotation')
+
+# Subsetting the data
+cellchat <- subsetData(cellchat) 
+
+# Identifying over-expressed genes 
+cellchat <- identifyOverExpressedGenes(cellchat)
+
+##
