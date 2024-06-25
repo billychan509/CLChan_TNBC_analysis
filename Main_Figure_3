@@ -41,15 +41,23 @@ AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
 NK_T_cells_seurat_CD8_T_cell <- AddModuleScore_UCell(NK_T_cells_seurat_CD8_T_cell,
                                    features = list(c("CTLA4","PDCD1","TIGIT","HAVCR2","LAYN","LAG3")))
 view(NK_T_cells_seurat_CD8_T_cell@meta.data) ## check the column no. that correspondes to the  column with the name 'signature1_Ucell'
-
+colnames(NK_T_cells_seurat_CD8_T_cell@meta.data)[28] <- 'T_cell_immunosuppression' ## In this case is 28 th column
 
 FeaturePlot(NK_T_cells_seurat_CD8_T_cell,
             features = "T_cell_immunosuppression",  
             cols = c("grey", "firebrick1"), split.by = "IHC")
+
 # Figure 3d:
+NK_T_cells_seurat_CD8_T_cell <- AddModuleScore_UCell(NK_T_cells_seurat_CD8_T_cell,
+                                   features = list(c("IL2", "TNF","CD44","IFNG")))
+view(NK_T_cells_seurat_CD8_T_cell@meta.data) ## check the column no. that correspondes to the  column with the name 'signature1_Ucell'
+colnames(NK_T_cells_seurat_CD8_T_cell@meta.data)[29] <- 'Effector_molecule' ## In this case is 29 th column
+
 FeaturePlot(NK_T_cells_seurat_CD8_T_cell,
-            features = "T_cell_immunosuppression",  
+            features = "Effector_molecule",  
             cols = c("grey", "firebrick1"), split.by = "IHC")
+
+
 # Figure 3e:
 
 # Figure 3f:
