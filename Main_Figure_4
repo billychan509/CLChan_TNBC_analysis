@@ -11,7 +11,29 @@ library(iTALK)
 # Figure 4a: 
 
 
+# Figure 4b:
 
+
+# Figure 4c:
+
+
+# Figure 4d:
+
+
+# Figure 4e:
+DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", group.by = "ploidy_IHC",
+        label = F, repel = T) + theme(text = element_text(face="bold")) +
+  theme(legend.title=element_text(size=50, color="black")) 
+
+
+# Figure 4f - 4h:
+ 
+
+
+# Figure 4i:
+VlnPlot(epithelial_cell_seurat_filtered,
+                 features = "CD24",
+                 cols = c("aquamarine","#0099CC","firebrick1"), split.by  = "IHC", pt.size = 0) + geom_boxplot(width=.2,col="black",fill="white")
 
 
 
