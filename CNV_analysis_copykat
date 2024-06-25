@@ -85,7 +85,9 @@ epithelial_cell_seurat@meta.data[rownames(epithelial_cell_seurat@meta.data) == i
 
 
 Idents(epithelial_cell_seurat) = "ploidy"
-epithelial_cell_seurat_aneuploid <- subset(epithelial_cell_seurat, idents = "aneuploid") ### Subsetting the tumorous epithelial cells
+
+### Subsetting the tumorous (aneuploid) epithelial cells ONLY:
+epithelial_cell_seurat_aneuploid <- subset(epithelial_cell_seurat, idents = "aneuploid") 
 
 epithelial_cell_seurat_aneuploid$ploidy <- "aneuploid_epithelial"
 epithelial_cell_seurat_aneuploid$subtype<- epithelial_cell_seurat_aneuploid$ploidy
