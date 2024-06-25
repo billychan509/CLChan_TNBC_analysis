@@ -4,7 +4,7 @@ library(grid)
 library(UCell)
 library(GSVA)
 
-## Pre-processing of scRNA seq data of Wu et al. (2021) is needed
+## Pre-processing of scRNA seq data of Wu et al. (2021) is needed before printing the Figure 3a - 3d
 
 # Figure 3a
 AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
@@ -163,9 +163,37 @@ boxplot(`antigen_processing_machinery` ~ mac_FABP5_TNBC_classification,
         col = c("red","royalblue1"), main = "Antigen Processing Machinery Expression", 
         main.font = 12, cex.main = 1.5)
 
-## p-value associated with Figure 3i
+## p-value associated with Figure 3i:
 wilcox.test(df_spearmen$antigen_processing_machinery[df_spearmen$mac_FABP5_TNBC_classification == 'mac_FABP5_TNBC High'],
             df_spearmen$antigen_processing_machinery[df_spearmen$mac_FABP5_TNBC_classification == 'mac_FABP5_TNBC Low']) 
+
+
+## Figure 3j: Comparing whether having high expression of mac_APOE signature score corresponds to the expression of the transcription factors related to T-cell exhaustion
+library(reshape2)
+
+# Specify the columns related to the expression of Transscription factors involved in T-cell exhaustion
+columns <- c("T-BET", "TOX", "EOMES")
+
+# Reshape the data using melt function
+melted_data <- melt(df_spearmen, id.vars = "mac_APOE_TNBC_classification", 
+                    measure.vars = columns, variable.name = "Variable")
+
+# Create the boxplot
+boxplot(value ~ mac_APOE_TNBC_classification + Variable, data = melted_data,
+        ylab = "Enrichment score", frame = FALSE, xlab = "",
+        col = c("red", "royalblue1"), main = "Enrichment score (Transcription Factors \ndriving T-cell exhaustion)",
+        main.font = 13, cex.main = 1.25)
+
+## p-values associated with Figure 3j:
+wilcox.test(df_spearmen$`T-BET`[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC High'],
+            df_spearmen$`T-BET`[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC Low'])
+
+wilcox.test(df_spearmen$`TOX`[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC High'],
+            df_spearmen$`TOX`[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC Low'])
+
+wilcox.test(df_spearmen$EOMES[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC High'],
+            df_spearmen$EOMES[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC Low'])
+
 
 
 
