@@ -92,6 +92,17 @@ for (i in names(deg_list_spearmen_Fig_4) ) {
 
 # Figure 4c:
 
+for(comm_type in comm_list){
+  res_cat<-FindLR(highly_exprs_genes,datatype='mean count',comm_type = comm_type)
+  res_cat<-res_cat[order(res_cat$cell_from_mean_exprs*res_cat$cell_to_mean_exprs,decreasing=T),]
+  #NetView(res_cat,col=cell_col,vertex.label.cex=1,arrow.width=0.5,edge.max.width=5, edge.label.color = "black")
+  LRPlot(res_cat[1:20,],datatype='mean count',cell_col=cell_col,link.arr.lwd=res_cat$cell_from_mean_exprs[1:20],link.arr.width=res_cat$cell_to_mean_exprs[1:20], annotation.height_1 = 0.1,
+         link.arr.col = c("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#808080", "#800000", "#808000",
+                          "#008000", "#800080", "#008080", "#000080", "#FFA500", "#FFC0CB", "#800080", "#FFD700", "#008080", "#A52A2A",
+                          "#FFFFF0", "#DC143C", "#00FFFF")
+  ,link.arr.type = NULL)
+  title(comm_type)
+  res<-rbind(res,res_cat)}
 
 # Figure 4d:
 Idents(epithelial_cell_seurat_filtered) <- "IHC"
