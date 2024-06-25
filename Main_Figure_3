@@ -2,7 +2,9 @@ library(Seurat)
 library(scRNAtoolVis)
 library(grid)
 library(UCell)
+library(GSVA)
 
+## Pre-processing of scRNA seq data of Wu et al. (2021) is needed
 
 # Figure 3a
 AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
@@ -57,12 +59,91 @@ FeaturePlot(NK_T_cells_seurat_CD8_T_cell,
             features = "Effector_molecule",  
             cols = c("grey", "firebrick1"), split.by = "IHC")
 
+#####################################################################
+## Starting from Figure 3d, prior processing of TCGA-BRCA bulk RNA seq data is necessary:
+## Step 1. Defining the relevant gene sets:
+mac_FABP5_refined_genes <- c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A1", "BRI3", "LHFPL2", "GPNMB", "GM2A",
+"RNASE1", "TIMP2", "MSR1", "LAMP", "NUPR1", "FNIP2", "CTSD", "APOC1", "CSTB", "ACP5", "RALA")
 
-# Figure 3e:
+mac_APOE_refined_genes <- c("ADAMDEC1", "ACP5", "PLD3", "LIPA", "KCNMA1", "GM2A", "SCPEP1", "SERPING1",
+                           "APOE", "TSPAN4", "CTSC", "TMEM176A", "DNASE2", "TMEM176B", "LILRB4", "C2", "A2M", "AKR1B1", "C1QA", "C1QB", "LGMN")
 
-# Figure 3f:
+mac_inflammation <- c("CCL11", "IFNG", "CCL3", "CCL4", "IL1B", "TNF", "IL1R2", "CD80", 
+                         "CD86", "TLR2", "HIF1A", "CSF2", "IL6", "CCL2", "CCL8", "CCL5", "CD68", "IRF5", "TLR4") ## From Zhang et al. (2021)
 
-# Figure 3g:
+Tcell_exhaustion <- c("CTLA4","PDCD1","TIGIT","HAVCR2","LAYN","LAG3")
+antigen_processing_machinery <-  c("B2M", "CALR", "NLRC5", "PSMB9", "PSME1", "PSME3", "RFX5", "HSP90AB1")
+
+
+
+deg_list_spearmen <-  list('mac_FABP5' = mac_FABP5_refined_genes,
+                           'mac_APOE' = mac_APOE_refined_genes, 'mac_inflammation '= mac_inflammation,
+                           'antigen_processing_machinery' = antigen_processing_machinery)
+
+X=as.matrix(exprSet_basal) 
+es.max_spearman <- gsva(X, deg_list_spearmen, min.sz > 1, ### calcualation of gene set enrichment score using GSVA package
+               mx.diff=FALSE, verbose=T, 
+               parallel.sz=4)
+
+
+
+## classification of gene expression level in the bulk RNA seq cohort:
+df_spearmen[df_spearmen$macrophage_inflammation_signature > 0,'macrophage_inflammation_level'] <- "High macrophage inflammation"
+df_spearmen[df_spearmen$macrophage_inflammation_signature < 0,'macrophage_inflammation_level'] <- "Low macrophage inflammation"
+
+df_spearmen[df_spearmen$T_cell_suppression > 0,'T_cell_suppression_level'] <- "High T-cell suppression"
+df_spearmen[df_spearmen$T_cell_suppression < 0,'T_cell_suppression_level'] <- "Low T-cell suppression"
+
+df_spearmen[df_spearmen$mac_APOE_TNBC > 0,'mac_APOE_TNBC_classification'] <- "mac_APOE_TNBC High"
+df_spearmen[df_spearmen$mac_APOE_TNBC < 0,'mac_APOE_TNBC_classification'] <- "mac_APOE_TNBC Low"
+
+df_spearmen[df_spearmen$mac_FABP5_TNBC > 0,'mac_FABP5_TNBC_classification'] <- "mac_FABP5_TNBC High"
+df_spearmen[df_spearmen$mac_FABP5_TNBC < 0,'mac_FABP5_TNBC_classification'] <- "mac_FABP5_TNBC Low"
+
+
+boxplot(`T_cell_suppression` ~ mac_APOE_TNBC_classification , data = df_spearmen, 
+        ylab = "Enrichment score (T-cell suppression)", frame = FALSE,
+        col = c("red","royalblue1"), main = "Enrichment score (T-cell suppression)", 
+        main.font = 12, cex.main = 1.5)
+
+wilcox.test(df_spearmen$T_cell_suppression[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC High'],
+            df_spearmen$T_cell_suppression[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC Low'])
+
+boxplot(`T_cell_suppression` ~ mac_FABP5_TNBC_classification , data = df_spearmen, 
+        ylab = "Enrichment score (T-cell suppression)", frame = FALSE,
+        col = c("red","royalblue1"), main = "Enrichment score (T-cell suppression)", 
+        main.font = 12, cex.main = 1.5)
+
+wilcox.test(df_spearmen$T_cell_suppression[df_spearmen$mac_FABP5_TNBC_classification == 'mac_FABP5_TNBC High'],
+            df_spearmen$T_cell_suppression[df_spearmen$mac_FABP5_TNBC_classification == 'mac_FABP5_TNBC Low'])
+
+boxplot(`T_cell_suppression` ~ macrophage_inflammation_level , data = df_spearmen, 
+        ylab = "Enrichment score (T-cell suppression)", frame = FALSE,
+        col = c("red","royalblue1"), main = "Enrichment score (T-cell suppression)", 
+        main.font = 12, cex.main = 1.5)
+
+wilcox.test(df_spearmen$T_cell_suppression[df_spearmen$macrophage_inflammation_level == 'High macrophage inflammation'],
+            df_spearmen$T_cell_suppression[df_spearmen$macrophage_inflammation_level == 'Low macrophage inflammation'])
+
+##########
+boxplot(`antigen_processing_machinery` ~ mac_APOE_TNBC_classification, 
+        data = df_spearmen, 
+        ylab = "Antigen Processing Machinery Expression", frame = FALSE,
+        col = c("red","royalblue1"), main = "Antigen Processing Machinery Expression", 
+        main.font = 12, cex.main = 1.5)
+
+wilcox.test(df_spearmen$antigen_processing_machinery[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC High'],
+            df_spearmen$antigen_processing_machinery[df_spearmen$mac_APOE_TNBC_classification == 'mac_APOE_TNBC Low'])
+
+
+boxplot(`antigen_processing_machinery` ~ mac_FABP5_TNBC_classification, 
+        data = df_spearmen, 
+        ylab = "Antigen Processing Machinery Expression", frame = FALSE,
+        col = c("red","royalblue1"), main = "Antigen Processing Machinery Expression", 
+        main.font = 12, cex.main = 1.5)
+
+wilcox.test(df_spearmen$antigen_processing_machinery[df_spearmen$mac_FABP5_TNBC_classification == 'mac_FABP5_TNBC High'],
+            df_spearmen$antigen_processing_machinery[df_spearmen$mac_FABP5_TNBC_classification == 'mac_FABP5_TNBC Low']) 
 
 
 
