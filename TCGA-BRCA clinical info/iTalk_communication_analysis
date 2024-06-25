@@ -1,8 +1,0 @@
-# Communication analysis using iTalk:
-
-library(iTALK)
-library(Seurat)
-library(Matrix)
-library(dplyr)
-
-epithelial_cell_seurat_filtered@meta.data$subtype <- epithelial_cell_seurat_filtered@meta.data$ploidy
