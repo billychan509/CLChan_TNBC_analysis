@@ -49,7 +49,55 @@ combined_copykat.test$CNAmat <- cbind(copykat.test_CID3838$CNAmat, copykat.test_
                                           copykat.test_CID44971$CNAmat, copykat.test_CID44991$CNAmat, copykat.test_CID4515$CNAmat,
                                           copykat.test_CID45171$CNAmat, copykat.test_CID4530N$CNAmat) 
 
+combined_df_ploidy <- data.frame(copykat.test$prediction)
+combined_df_ploidy <- combined_df_ploidy[-which(combined_df_ploidy$copykat.pred=="not.defined"),]  ##remove undefined cells
+CNA.test <- data.frame(combined_copykat.test$CNAmat)
+
+my_palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(n = 3, name = "RdBu")))(n = 999)
+
+chr <- as.numeric(CNA.test$chrom) %% 2+1
+rbPal1 <- colorRampPalette(c('black','grey'))
+CHR <- rbPal1(2)[as.numeric(chr)]
+chr1 <- cbind(CHR,CHR)
+
+rbPal5 <- colorRampPalette(RColorBrewer::brewer.pal(n = 8, name = "Dark2")[2:1])
+com.preN <- pred.test$copykat.pred
+pred <- rbPal5(2)[as.numeric(factor(com.preN))]
+
+cells <- rbind(pred,pred)
+col_breaks = c(seq(-1,-0.4,length=50),seq(-0.4,-0.2,length=150),seq(-0.2,0.2,length=600),
+               seq(0.2,0.4,length=150),seq(0.4, 1,length=50))
+
+####  Defining subpopulations of aneuploid tumor cells:
+
+tumor.cells <- combined_df_ploidy$cell.names[which(combined_df_ploidy$copykat.pred=="aneuploid")]
+tumor.mat <- CNA.test[, which(colnames(CNA.test) %in% tumor.cells)]
+
+hcc <- hclust(parallelDist::parDist(t(tumor.mat),threads =4, method = "euclidean"), method = "ward.D2")
+hc.umap <- cutree(hcc,2)
+
+###################
+### Assigning the ploidy the metadata of scRNA seq data from  Wu et al. (2021):
+## Correctly assign the ploidy:
+epithelial_cell_seurat@meta.data$ploidy <- NA
+for (i in combined_df_ploidy$cell.names){
+epithelial_cell_seurat@meta.data[rownames(epithelial_cell_seurat@meta.data) == i, "ploidy"] <- combined_df_ploidy$copykat.pred[combined_df_ploidy$cell.names == i]}
 
 
+Idents(epithelial_cell_seurat) = "ploidy"
+epithelial_cell_seurat_aneuploid <- subset(epithelial_cell_seurat, idents = "aneuploid") ### Subsetting the tumorous epithelial cells
 
+epithelial_cell_seurat_aneuploid$ploidy <- "aneuploid_epithelial"
+epithelial_cell_seurat_aneuploid$subtype<- epithelial_cell_seurat_aneuploid$ploidy
+
+epithelial_cell_seurat <- subset(epithelial_cell_seurat, ident = (epithelial_cell_seurat@meta.data$ploidy %>% unique())
+
+#### obtaining only the diploid and aneuploid cells; remove the low confidence/ undefined cells 
+Idents(epithelial_cell_seurat) <- "ploidy"
+Idents(epithelial_cell_seurat_filtered) <- "IHC"
+epithelial_cell_seurat_filtered <- subset(epithelial_cell_seurat, idents = c("diploid","aneuploid"))
+
+epithelial_cell_seurat_filtered@meta.data$ploidy_IHC <- paste0(epithelial_cell_seurat_filtered@meta.data$ploidy,"_",epithelial_cell_seurat_filtered@meta.data$IHC)
+
+epithelial_cell_seurat_filtered <- subset(epithelial_cell_seurat_filtered, idents = (epithelial_cell_seurat_filtered@meta.data$ploidy_IHC %>% unique()))
 
