@@ -8,6 +8,8 @@ library(ComplexHeatmap)
 library(tidyverse)
 library(survminer) 
 library(survival)
+library(GSVA)
+library(COSG)
 
 # Please pre-process the TCGA-BRCA data first, we only need to the bulk-RNA seq data from the basal-like breast cancer patients for correlation analysis/ survival analysis:
 # Figure 2a and 2d:
@@ -15,8 +17,7 @@ library(survival)
 library(ggpubr)
 
 X=as.matrix(exprSet_basal)
-mac_Inflammation_genes <- c("CCL11", "IFNG", "CCL3", "CCL4", "IL1B", "TNF", "IL1R2", "CD80",
-                             "CD86", "TLR2", "HIF1A", "CSF2", "IL6", "CCL2", "CCL8", "CCL5", "CD68", "IRF5", "TLR4") ## adopted from Zhang et al. (2021)
+
 
 mac_APOE_refined_genes <- c('ADAMDEC1', 'ACP5', 'PLD3', 'LIPA', 'KCNMA1', 'GM2A', 'SCPEP1', 'SERPING1', 'APOE', 'TSPAN4', 'CTSC', 'TMEM176A', 'DNASE2', 
                             'TMEM176B', 'LILRB4', 'C2', 'A2M', 'AKR1B1','C1QA', 'C1QB', 'LGMN') ## genes obtained by comparing  mac_APOE signature of Wu et al. (2021) and that of Pal et al. (2021)
@@ -25,16 +26,22 @@ mac_FABP5_refined_genes <- c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A
                              "GPNMB", "GM2A", "RNASE1", "TIMP2", "MSR1", "LAMP", "NUPR1", "FNIP2",
                              "CTSD", "APOC1", "CSTB", "ACP5", "RALA")  ## genes obtained by comparing  mac_FABP5 signature of Wu et al. (2021) and that of Pal et al. (2021)
 
+mac_inflammation <- c("CCL11", "IFNG", "CCL3", "CCL4", "IL1B", "TNF", "IL1R2", "CD80", 
+                         "CD86", "TLR2", "HIF1A", "CSF2", "IL6", "CCL2", "CCL8", "CCL5", "CD68", "IRF5", "TLR4") ## From Zhang et al. (2021)
+
 deg_list_spearmen_lipid_mac <-  list('mac_FABP5' = mac_FABP5_refined_genes, 'mac_APOE' = mac_APOE_refined_genes, 
-                                          'macrophage_inflammatory_signature' = mac_Inflammation_genes) 
+                                          'macrophage_inflammatory_signature' = mac_inflammation) 
 
-es.max_spearman_spearman_lipid_mac <- gsva(X, deg_list_spearmen_lipid_mac, 
+es.max_spearman_lipid_mac <- gsva(X, deg_list_spearmen_lipid_mac, 
                                   mx.diff=FALSE, verbose=T, 
-                                  parallel.sz=4)
+                                  parallel.sz=4) ## Gene set expressions score calculated by GSVA package
 
-df_spearmen_lipid_mac_inflam = data_frame("mac_APOE_TNBC" = es.max_spearman_spearman_lipid_mac$mac_APOE,
-                                            "mac_FABP5_TNBC" = es.max_spearman_spearman_lipid_mac$mac_FABP5,
-                                            "macrophage_inflammation_signature" = es.max_spearman_spearman_lipid_mac$macrophage_inflammatory_signature)
+es.max_spearman_lipid_mac  <- t(es.max_spearman_lipid_mac)
+es.max_spearman_lipid_mac  <- as.data.frame(es.max_spearman_lipid_mac)
+
+df_spearmen_lipid_mac_inflam = data_frame("mac_APOE" = es.max_spearman_lipid_mac$mac_APOE,
+                                            "mac_FABP5" = es.max_spearman_lipid_mac$mac_FABP5,
+                                            "macrophage_inflammation_signature" = es.max_spearman_lipid_mac$macrophage_inflammatory_signature)
 
 
 ggscatter(df_spearmen_lipid_mac_inflam, y = 'macrophage_inflammation_signature', x = "mac_FABP5_TNBC",
@@ -55,65 +62,66 @@ ggscatter(df_spearmen_lipid_mac_inflam, y = 'macrophage_inflammation_signature',
           cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
           cor.coeff.args = list(method = "spearman",  label.sep = "\n"),
           cor.coef.size = 4,
-          font.label = c(22,"bold")) ## Figure 2a
+          font.label = c(22,"bold")) ## Figure 2d
 
 
 # Figure 2b and 2e - KM survival
 ### Pre-process the TCGA-BRCA cohort first !!
-deg
 
-## Figure 2b:
+es.max_spearman_lipid_mac_Fig2b <- es.max_spearman_lipid_mac
 #####
-mac_APOE_refined_genes <- c('ADAMDEC1', 'ACP5', 'PLD3', 'LIPA', 'KCNMA1', 'GM2A', 'SCPEP1', 'SERPING1', 
-                            'APOE', 'TSPAN4', 'CTSC', 'TMEM176A', 'DNASE2', 
-                            'TMEM176B', 'LILRB4', 'C2', 'A2M', 'AKR1B1', 'C1QA', 'C1QB', 'LGMN')
+## Figure 2b
+ifelse((es.max_spearman_lipid_mac_Fig2b$mac_inflammation > 0 & es.max_spearman_lipid_mac_Fig2b$mac_FABP5 > 0),"high mac_FABP5 and high inflammation", 
+       ifelse(es.max_spearman_lipid_mac_Fig2b$mac_inflammation < 0 & es.max_spearman_lipid_mac_Fig2b$mac_FABP5 < 0, "low mac_FABP5 and low inflammation",
+              ifelse(es.max_spearman_lipid_mac_Fig2b$mac_inflammation > 0 & es.max_spearman_lipid_mac_Fig2b$mac_FABP5 < 0, "low mac_FABP5 and high inflammation",
+                     "high mac_FABP5 and low inflammation")))   
+table(sub_group) 
+phe$sub_group=sub_group
+phe_filtered_APOE <- phe[phe$sub_group == "high mac_FABP5 and high inflammation" | phe$sub_group =="low mac_FABP5 and low inflammation",]
 
-mac_FABP5_refined_genes <- c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A1", "BRI3", "LHFPL2", 
-                             "GPNMB", "GM2A", "RNASE1", "TIMP2", "MSR1", "LAMP", "NUPR1", "FNIP2",
-                             "CTSD", "APOC1", "CSTB", "ACP5", "RALA")
-
-
-for (i in  colnames(es.max_spearman) ) {
-  #for (i in  names(deg_list) ) {
-  # names(deg_list) [i]
-  subset = paste0(i)
-  #v = as.numeric(es.max_spearman[,i])   
-  ifelse((es.max_spearman$mac_inflammation > 0 & es.max_spearman$mac_APOE > 0),"high mac_APOE and high inflammation", 
-                      ifelse(es.max_spearman$mac_inflammation < 0 & es.max_spearman$mac_APOE < 0, "low mac_APOE and low inflammation",
-                             ifelse(es.max_spearman$mac_inflammation > 0 & es.max_spearman$mac_APOE < 0, "low mac_APOE and high inflammation",
-                                    "high mac_APOE and low inflammation")))   
-  table(sub_group) 
-  phe$sub_group=sub_group
-  phe_filtered <- phe[phe$sub_group == "high mac_FABP5 and high inflammation" | phe$sub_group =="low mac_FABP5 and low inflammation",]
-  
-  phe_filtered <- phe[phe$sub_group == "high mac_APOE and high inflammation" | phe$sub_group =="low mac_APOE and low inflammation",]
- 
 # Fit survival curves
-  require("survival")
-  fit <- survfit(Surv(time, event) ~ sub_group, data = phe_filtered)
-  library("survminer")
-  survp <- ggsurvplot(fit, data = phe_filtered,
-                      surv.median.line = "hv", # Add medians survival
-                      pval = TRUE,             # Add p-value and tervals 
-                      conf.int = TRUE,        # Add the 95% confidence band
-                      risk.table = TRUE,      # Add risk table
-                      tables.height = 0.2,
-                      tables.theme = theme_cleantable(),
-                      palette = c("red","blue"),
-                      ggtheme = theme_bw(),
-                      title = "mac_inflammaton and mac_APOE (aggregated signatures)")
-  
-  
-  print(survp)
-  splots[[g]] <-  survp
-  g = g + 1
-}
+require("survival")
+fit <- survfit(Surv(time, event) ~ sub_group, data = phe_filtered_FABP5)
+library("survminer")
+survp <- ggsurvplot(fit, data = phe_filtered,
+                    surv.median.line = "hv", # Add medians survival
+                    pval = TRUE,             # Add p-value and tervals 
+                    conf.int = TRUE,        # Add the 95% confidence band
+                    risk.table = TRUE,      # Add risk table
+                    tables.height = 0.2,
+                    tables.theme = theme_cleantable(),
+                    palette = c("red","blue"),
+                    ggtheme = theme_bw(),
+                    title = "mac_inflammaton signature and mac_FABP5 signatures")
 
 
+print(survp) ### Figure 2b
 
+## Figure 2e 
+ifelse((es.max_spearman_lipid_mac_Fig2b$mac_inflammation > 0 & es.max_spearman_lipid_mac_Fig2b$mac_FABP5 > 0),"high mac_FABP5 and high inflammation", 
+       ifelse(es.max_spearman_lipid_mac_Fig2b$mac_inflammation < 0 & es.max_spearman_lipid_mac_Fig2b$mac_FABP5 < 0, "low mac_FABP5 and low inflammation",
+              ifelse(es.max_spearman_lipid_mac_Fig2b$mac_inflammation > 0 & es.max_spearman_lipid_mac_Fig2b$mac_FABP5 < 0, "low mac_FABP5 and high inflammation",
+                     "high mac_FABP5 and low inflammation")))   
+table(sub_group) 
+phe$sub_group=sub_group
+phe_filtered_FABP5 <- phe[phe$sub_group == "high mac_FABP5 and high inflammation" | phe$sub_group =="low mac_FABP5 and low inflammation",]
 
+# Fit survival curves
+require("survival")
+fit <- survfit(Surv(time, event) ~ sub_group, data = phe_filtered_FABP5)
+library("survminer")
+survp <- ggsurvplot(fit, data = phe_filtered,
+                    surv.median.line = "hv", # Add medians survival
+                    pval = TRUE,             # Add p-value and tervals 
+                    conf.int = TRUE,        # Add the 95% confidence band
+                    risk.table = TRUE,      # Add risk table
+                    tables.height = 0.2,
+                    tables.theme = theme_cleantable(),
+                    palette = c("red","blue"),
+                    ggtheme = theme_bw(),
+                    title = "mac_inflammaton signature and mac_FABP5 signatures")
 
-
+print(survp) ## Figure 2e
 
 
 #Figure 2c, 2f:
