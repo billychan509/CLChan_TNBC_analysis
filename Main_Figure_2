@@ -5,6 +5,7 @@ library(enrichR)
 library(ggplot2)
 library(Seurat)
 library(ComplexHeatmap)
+library(circlize)
 library(tidyverse)
 library(survminer) 
 library(survival)
@@ -110,19 +111,31 @@ phe_filtered_FABP5 <- phe[phe$sub_group == "high mac_FABP5 and high inflammation
 require("survival")
 fit <- survfit(Surv(time, event) ~ sub_group, data = phe_filtered_FABP5)
 library("survminer")
-survp <- ggsurvplot(fit, data = phe_filtered,
-                    surv.median.line = "hv", # Add medians survival
-                    pval = TRUE,             # Add p-value and tervals 
-                    conf.int = TRUE,        # Add the 95% confidence band
-                    risk.table = TRUE,      # Add risk table
-                    tables.height = 0.2,
-                    tables.theme = theme_cleantable(),
-                    palette = c("red","blue"),
-                    ggtheme = theme_bw(),
-                    title = "mac_inflammaton signature and mac_FABP5 signatures")
 
-print(survp) ## Figure 2e
+  v = as.numeric(es.max_spearman_lipid_mac_Fig2b[,'mac_FABP5'])
+  phe$v <- v
+  head(phe)
+  sur.cut <- surv_cutpoint(phe_filtered_FABP5,
+                           time= 'time',
+                           event = 'event' ,
+                           variables = 'v')
 
+  sur.cat <- surv_categorize(sur.cut)
+  head(sur.cat)
+  sfit <- survfit(Surv(time, event) ~ v, data = sur.cat)
+
+  p_surv_cut <- ggsurvplot(sfit, data = phe_filtered_FABP5,
+                           surv.median.line = "hv", # Add medians survival
+                           pval = TRUE, # Add p-value and tervals 
+                           conf.int = TRUE, # Add the 95% confidence band
+                           risk.table = TRUE, # Add risk table
+                           tables.height = 0.2,
+                           tables.theme = theme_cleantable(),
+                           palette = c('red','blue'),
+                           ggtheme = theme_bw(),
+                           title = subset)
+
+  print(p_surv_cut) ## Figure 2e
 
 #Figure 2c, 2f:
 GO_results_mac_FABP5  <- enrichGO(gene = c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A1", "BRI3", "LHFPL2", "GPNMB", "GM2A", 
@@ -243,9 +256,6 @@ X=as.matrix(exprSet_basal)
 es.max_spearman_NF_KB_pathway<- gsva(X, deg_list_spearmen_NFKB_pathway, 
                                   mx.diff=FALSE, verbose=T, 
                                   parallel.sz=4)
-
-library(ComplexHeatmap)
-library(circlize)
 
 df_spearmen_NFKB = data_frame("mac_APOE_TNBC" = es.max_spearman_NF_KB_pathway$mac_APOE,
                 "mac_FABP5_TNBC" = es.max_spearman_NF_KB_pathway$mac_FABP5,
