@@ -107,3 +107,14 @@ Idents(myeloid_chem_responder_seurat_all) <- "RNA_snn_res.0.04"
 
 DimPlot(myeloid_chem_responder_seurat_all, reduction = "umap", group.by = "RNA_snn_res.0.04", label = T) + 
                      theme(legend.title=element_text(size=50, color="black")) 
+
+###################################
+
+
+
+
+
+
+
+
+
