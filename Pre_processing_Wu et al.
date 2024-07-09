@@ -108,8 +108,11 @@ Idents(myeloid_chem_responder_seurat_all) <- "RNA_snn_res.0.04"
 DimPlot(myeloid_chem_responder_seurat_all, reduction = "umap", group.by = "RNA_snn_res.0.04", label = T) + 
                      theme(legend.title=element_text(size=50, color="black")) 
 
-###################################
+##### 
+Further pre-processing of seurat object and assign the seurat object based on the marker genes of each cluster:
 
+Idents(merged_seurat_obj) <- "IHC"
+merged_seurat_obj_filtered<- subset(merged_seurat_obj, ident = c('HER2','ER','TNBC')) ## only obtain the cells derived from HER2, ER and TNBC tumor
 
 
 
