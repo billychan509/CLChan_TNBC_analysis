@@ -148,12 +148,36 @@ myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '10', "My
 myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '11', "Myeloid_cells"] <- "cmc"
 myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '12', "Myeloid_cells"] <- "Mreg"
 
+myeloid_seurat_filtered@meta.data$subtype <- myeloid_seurat_filtered@meta.data$Myeloid_cells
+
 ## 2. NK/ T-cells:
+NK_T_cells_seurat <- subset(merged_seurat_obj_filtered, ident = "NK/T−cells")
+
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '0', "NKT_cells_and_T_cells"] <- "Central_Mem_T" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '1', "NKT_cells_and_T_cells"] <- "unassigned_1_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '2', "NKT_cells_and_T_cells"] <- "unassigned_2_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '3', "NKT_cells_and_T_cells"] <- "alpha/beta_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '4', "NKT_cells_and_T_cells"] <- "GZMK_CD8_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '5', "NKT_cells_and_T_cells"] <- "LAG3_CD8_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '6', "NKT_cells_and_T_cells"] <- "unassigned_3_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '7', "NKT_cells_and_T_cells"] <- "unassigned_4_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '8', "NKT_cells_and_T_cells"] <- "CXCL13_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '9', "NKT_cells_and_T_cells"] <- "NKT_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '10', "NKT_cells_and_T_cells"] <- "XCL2_CD8_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '11', "NKT_cells_and_T_cells"] <- "CD4_Treg" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '12', "NKT_cells_and_T_cells"] <- "unassigned_5_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '13', "NKT_cells_and_T_cells"] <- "IFIT_T_cell" 
+
+## Filter out the unassigned cells:
+Idents(NK_T_cells_seurat) <- "NKT_cells_and_T_cells"
+NK_T_cells_seurat <- subset(NK_T_cells_seurat, ident =  c("XCL2_CD8_T_cell", "GZMK_CD8_T_cell", "LAG3_CD8_T_cell", 
+                                                          "Central_Mem_T", "NKT_cells", "IFIT_T_cell",
+                                                          "alpha/beta_T_cells", "CD4_Treg", "CXCL13_T_cell"))
+
+NK_T_cells_seurat@meta.data$subtype <- NK_T_cells_seurat@meta.data$NKT_cells_and_T_cells
 
 
-
-
-
+### 3. Cancer-associated fibroblast (CAFs)
 
 
 
