@@ -246,15 +246,7 @@ groupSize <- as.numeric(table(cellchat@idents))
 netVisual_aggregate(cellchat, signaling = "MIF",
                    targets.use= c("mac_FABP5_TNBC", "mac_APOE_TNBC"),
                    sources.use = c("Mreg_TNBC", "CD4_Treg_TNBC","mCAF_TNBC"),
-                    remove.isolate = T, cell.order = T, thresh = 0.01) ### This will eventually gives the figure 2h
-
-####Figure 2g.
-Idents(myeloid_seurat_filtered) <- "IHC"
-myeloid_seurat_filtered_TNBC <- subset(myeloid_seurat_filtered, idents = "TNBC")
-
-AverageHeatmap(object = myeloid_seurat_filtered_TNBC,
-               markerGene = c("IGF1", "LYZ", "CSTB", "CTSD", "CTSZ", "CTSB", "CTSL", "CTSS",
-                              "CALR", "CREG1", "NPC2", "CD63", "SDCBP", "PSAP", "SPP1"), cluster_columns = T)
+                    remove.isolate = T, cell.order = T, thresh = 0.01) ### This will eventually gives the Figure 2h
 
 ##### Figure 2I Speramen correlation analysis:
 mac_APOE_refined_genes <- c('ADAMDEC1', 'ACP5', 'PLD3', 'LIPA', 'KCNMA1', 'GM2A', 'SCPEP1', 'SERPING1', 
