@@ -16,7 +16,6 @@ library(COSG)
 # Figure 2a and 2d:
 
 library(ggpubr)
-
 X=as.matrix(exprSet_basal)
 
 
@@ -165,6 +164,24 @@ plot(barplot(GO_results_mac_APOE, showCategory =  c("complement activation, clas
                                                     "lipid storage", 'lipoprotein catabolic process'),
              title = "Enriched Biological Processes (mac_APOE)", font.size = 13)) #Figure 2f.
 
+### Figure 2g:
+
+AverageHeatmap(object = myeloid_seurat_filtered,
+               markerGene = unique(c("CTSS","CREG1","SPP1","CTSB","SDCBP","CDKN2A",
+                                     'CTSL',"CTSD","PSAP","CD63","LYZ","IGF1","NPC2",
+                                     "SLPI","CTSZ","CALR",'EGR1')),
+               clusterAnnoName = T,
+               showRowNames = T,
+               row_title = "SASP genes",
+               column_names_rot = 90,
+               column_names_gp = gpar(fontsize = 12),
+               group.by = "ident",
+               cluster_columns = T,
+               cluster_rows = F,
+               fontsize = 15,
+               border = T,
+               htRange = c(-2, 0, 2),
+               htCol = c("blue","white","red2"))
 
 ### Figure 2h: Cell-cell communication analysis by CellChat:
 library(CellChat)
