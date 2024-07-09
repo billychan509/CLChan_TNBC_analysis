@@ -77,7 +77,7 @@ hcc <- hclust(parallelDist::parDist(t(tumor.mat),threads =4, method = "euclidean
 hc.umap <- cutree(hcc,2)
 
 ###################
-### Assigning the ploidy the metadata of scRNA seq data from  Wu et al. (2021):
+### Assigning the ploidy the metadata of scRNA-seq data from  Wu et al. (2021):
 ## Correctly assign the ploidy:
 epithelial_cell_seurat@meta.data$ploidy <- NA
 for (i in combined_df_ploidy$cell.names){
