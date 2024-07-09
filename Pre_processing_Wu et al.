@@ -210,4 +210,3 @@ Idents(CAF_seurat_filtered) <- "CAFs"
 CAF_seurat_filtered <- subset(CAF_seurat_filtered, ident = c("collagen_CAF","iCAFs","activated CAF","mCAF","ifn CAFs"))
 
 CAF_seurat_filtered@meta.data$subtype <- CAF_seurat_filtered@meta.data$CAFs
-
