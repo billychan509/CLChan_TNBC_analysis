@@ -109,9 +109,12 @@ DimPlot(myeloid_chem_responder_seurat_all, reduction = "umap", group.by = "RNA_s
                      theme(legend.title=element_text(size=50, color="black")) 
 
 ##### 
-#Further pre-processing of seurat object and assign the seurat object based on the marker genes of each cluster:
+#Further pre-processing of seurat object and assign the identities of subtypes of tumor-associated cells based on the marker genes of each cluster:
 
-##### Assigning identity of different clusters:
+library(tidyverse)
+library(Seurat)
+
+##### Assigning identity of different clusters
 merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '0', "Tumor_Associated_Cells"] <- "NK/T−cells"
 merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '1', "Tumor_Associated_Cells"] <- "Epithelal Cells"
 merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '2', "Tumor_Associated_Cells"] <- "Myeloid Cells"
@@ -124,49 +127,57 @@ merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '8',
 merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '9', "Tumor_Associated_Cells"] <- "Plasmablasts"
 merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '10', "Tumor_Associated_Cells"] <- "Epithelal Cells"
 
-
 Idents(merged_seurat_obj) <- "IHC"
 merged_seurat_obj_filtered<- subset(merged_seurat_obj, ident = c('HER2','ER','TNBC'))
 
-# subsetting different cell types:
+# subsetting different subtypes of tumor-associated cells:
 Idents(merged_seurat_obj_filtered) <- "Tumor_Associated_Cells" ## important 
+myeloid_seurat_filtered <- subset(merged_seurat_obj_filtered, ident = "Myeloid Cells") ## 1. Myeloid cells
 
-## 1. Myeloid cells
-myeloid_seurat_filtered <- subset(merged_seurat_obj_filtered, ident = "Myeloid Cells") 
+myeloid_seurat_filtered <- myeloid_seurat_filtered %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res = 1) %>%
+  RunUMAP(dims = 1:50, reduction='pca') 
 
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '0', "Myeloid_cells"] <- "mono_S100A8"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '1', "Myeloid_cells"] <- "mac_CCL3"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '2', "Myeloid_cells"] <- "mac_CXCL10"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '3', "Myeloid_cells"] <- "unassigned#1"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '4', "Myeloid_cells"] <- "mac_APOE"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '5', "Myeloid_cells"] <- "mac_FABP5"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '6', "Myeloid_cells"] <- "mac_TREM2"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '7', "Myeloid_cells"] <- "cDc"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '8', "Myeloid_cells"] <- "unassigned#2"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '9', "Myeloid_cells"] <- "mac_CXCL10"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '10', "Myeloid_cells"] <- "mature DC"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '11', "Myeloid_cells"] <- "cmc"
-myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '12', "Myeloid_cells"] <- "Mreg"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '0', "Myeloid_cells"] <- "mono_S100A8"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '1', "Myeloid_cells"] <- "mac_CCL3"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '2', "Myeloid_cells"] <- "mac_CXCL10"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '3', "Myeloid_cells"] <- "unassigned#1"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '4', "Myeloid_cells"] <- "mac_APOE"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '5', "Myeloid_cells"] <- "mac_FABP5"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '6', "Myeloid_cells"] <- "mac_TREM2"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '7', "Myeloid_cells"] <- "cDc"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '8', "Myeloid_cells"] <- "unassigned#2"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '9', "Myeloid_cells"] <- "mac_CXCL10"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '10', "Myeloid_cells"] <- "mature DC"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '11', "Myeloid_cells"] <- "cmc"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$RNA_snn_res.1 == '12', "Myeloid_cells"] <- "Mreg"
 
 myeloid_seurat_filtered@meta.data$subtype <- myeloid_seurat_filtered@meta.data$Myeloid_cells
 
-## 2. NK/ T-cells:
+##  2. NKT/ T- cells:
+Idents(merged_seurat_obj_filtered) <- 'Tumor_Associated_Cells'
 NK_T_cells_seurat <- subset(merged_seurat_obj_filtered, ident = "NK/T−cells")
 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '0', "NKT_cells_and_T_cells"] <- "Central_Mem_T" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '1', "NKT_cells_and_T_cells"] <- "unassigned_1_T_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '2', "NKT_cells_and_T_cells"] <- "unassigned_2_T_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '3', "NKT_cells_and_T_cells"] <- "alpha/beta_T_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '4', "NKT_cells_and_T_cells"] <- "GZMK_CD8_T_cell" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '5', "NKT_cells_and_T_cells"] <- "LAG3_CD8_T_cell" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '6', "NKT_cells_and_T_cells"] <- "unassigned_3_T_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '7', "NKT_cells_and_T_cells"] <- "unassigned_4_T_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '8', "NKT_cells_and_T_cells"] <- "CXCL13_T_cell" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '9', "NKT_cells_and_T_cells"] <- "NKT_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '10', "NKT_cells_and_T_cells"] <- "XCL2_CD8_T_cell" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '11', "NKT_cells_and_T_cells"] <- "CD4_Treg" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '12', "NKT_cells_and_T_cells"] <- "unassigned_5_T_cells" 
-NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data == '13', "NKT_cells_and_T_cells"] <- "IFIT_T_cell" 
+NK_T_cells_seurat <- NK_T_cells_seurat %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res = 1.1) %>%
+  RunUMAP(dims = 1:50, reduction='pca') 
+
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '0', "NKT_cells_and_T_cells"] <- "Central_Mem_T" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '1', "NKT_cells_and_T_cells"] <- "unassigned_1_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '2', "NKT_cells_and_T_cells"] <- "unassigned_2_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '3', "NKT_cells_and_T_cells"] <- "alpha/beta_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '4', "NKT_cells_and_T_cells"] <- "GZMK_CD8_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '5', "NKT_cells_and_T_cells"] <- "LAG3_CD8_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '6', "NKT_cells_and_T_cells"] <- "unassigned_3_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '7', "NKT_cells_and_T_cells"] <- "unassigned_4_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '8', "NKT_cells_and_T_cells"] <- "CXCL13_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '9', "NKT_cells_and_T_cells"] <- "NKT_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '10', "NKT_cells_and_T_cells"] <- "XCL2_CD8_T_cell" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '11', "NKT_cells_and_T_cells"] <- "CD4_Treg" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '12', "NKT_cells_and_T_cells"] <- "unassigned_5_T_cells" 
+NK_T_cells_seurat@meta.data[NK_T_cells_seurat@meta.data$RNA_snn_res.1.1 == '13', "NKT_cells_and_T_cells"] <- "IFIT_T_cell" 
 
 ## Filter out the unassigned cells:
 Idents(NK_T_cells_seurat) <- "NKT_cells_and_T_cells"
@@ -176,10 +187,27 @@ NK_T_cells_seurat <- subset(NK_T_cells_seurat, ident =  c("XCL2_CD8_T_cell", "GZ
 
 NK_T_cells_seurat@meta.data$subtype <- NK_T_cells_seurat@meta.data$NKT_cells_and_T_cells
 
+## Cancer-associated fibroblast:
+Idents(merged_seurat_obj_filtered) <- 'Tumor_Associated_Cells'
+CAF_seurat_filtered <- subset(merged_seurat_obj_filtered, ident = "CAFs")
 
-### 3. Cancer-associated fibroblast (CAFs)
+CAF_seurat_filtered <- CAF_seurat_filtered %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res=0.4) %>%
+  RunUMAP(dims = 1:50, reduction='pca') 
+
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '0',"CAFs"] <- "unassigned_1_CAFs"
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '1',"CAFs"] <- "collagen_CAF"
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '2',"CAFs"] <- "iCAFs"
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '3',"CAFs"] <- "activated CAF"
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '4',"CAFs"] <- "unassigned_2_CAFs"
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '5',"CAFs"] <-  "mCAF"
+CAF_seurat_filtered@meta.data[CAF_seurat_filtered@meta.data$RNA_snn_res.0.4 == '6',"CAFs"] <-  "ifn CAFs"
 
 
+Idents(CAF_seurat_filtered) <- "CAFs"
 
+CAF_seurat_filtered <- subset(CAF_seurat_filtered, ident = c("collagen_CAF","iCAFs","activated CAF","mCAF","ifn CAFs"))
 
+CAF_seurat_filtered@meta.data$subtype <- CAF_seurat_filtered@meta.data$CAFs
 
