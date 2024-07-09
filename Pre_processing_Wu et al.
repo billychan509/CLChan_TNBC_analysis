@@ -109,10 +109,48 @@ DimPlot(myeloid_chem_responder_seurat_all, reduction = "umap", group.by = "RNA_s
                      theme(legend.title=element_text(size=50, color="black")) 
 
 ##### 
-Further pre-processing of seurat object and assign the seurat object based on the marker genes of each cluster:
+#Further pre-processing of seurat object and assign the seurat object based on the marker genes of each cluster:
+
+##### Assigning identity of different clusters:
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '0', "Tumor_Associated_Cells"] <- "NK/T−cells"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '1', "Tumor_Associated_Cells"] <- "Epithelal Cells"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '2', "Tumor_Associated_Cells"] <- "Myeloid Cells"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '3', "Tumor_Associated_Cells"] <- "CAFs"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '4', "Tumor_Associated_Cells"] <- "Endothelial Cells"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '5', "Tumor_Associated_Cells"] <- "Epithelal Cells"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '6', "Tumor_Associated_Cells"] <- "Plasmablasts"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '7', "Tumor_Associated_Cells"] <- "Myofibroblast"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '8', "Tumor_Associated_Cells"] <- "B-Cells"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '9', "Tumor_Associated_Cells"] <- "Plasmablasts"
+merged_seurat_obj@meta.data[merged_seurat_obj@meta.data$RNA_snn_res.0.04 == '10', "Tumor_Associated_Cells"] <- "Epithelal Cells"
+
 
 Idents(merged_seurat_obj) <- "IHC"
-merged_seurat_obj_filtered<- subset(merged_seurat_obj, ident = c('HER2','ER','TNBC')) ## only obtain the cells derived from HER2, ER and TNBC tumor
+merged_seurat_obj_filtered<- subset(merged_seurat_obj, ident = c('HER2','ER','TNBC'))
+
+# subsetting different cell types:
+Idents(merged_seurat_obj_filtered) <- "Tumor_Associated_Cells" ## important 
+
+## 1. Myeloid cells
+myeloid_seurat_filtered <- subset(merged_seurat_obj_filtered, ident = "Myeloid Cells") 
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '0', "Myeloid_cells"] <- "mono_S100A8"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '1', "Myeloid_cells"] <- "mac_CCL3"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '2', "Myeloid_cells"] <- "mac_CXCL10"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '3', "Myeloid_cells"] <- "unassigned#1"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '4', "Myeloid_cells"] <- "mac_APOE"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '5', "Myeloid_cells"] <- "mac_FABP5"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '6', "Myeloid_cells"] <- "mac_TREM2"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '7', "Myeloid_cells"] <- "cDc"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '8', "Myeloid_cells"] <- "unassigned#2"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '9', "Myeloid_cells"] <- "mac_CXCL10"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '10', "Myeloid_cells"] <- "mature DC"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '11', "Myeloid_cells"] <- "cmc"
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data == '12', "Myeloid_cells"] <- "Mreg"
+
+## 2. NK/ T-cells:
+
+
 
 
 
