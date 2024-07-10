@@ -106,7 +106,7 @@ for(comm_type in comm_list){
   res<-rbind(res,res_cat)} ### Obtain the LR Plot for checkpoint for Figure .4c
 
 # Figure 4d:
-### Conduct the Copy number variation analysis (CNV) analysis first using copykat package (Gao et al., 2022):
+### Conduct the Copy number variation analysis (CNV) analysis first using copykat package (Gao et al., 2021):
 
 Idents(epithelial_cell_seurat_filtered) <- "IHC"
 DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", split.by = "ploidy",
