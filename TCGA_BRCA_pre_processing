@@ -13,7 +13,7 @@ rownames(dat) = dat$Ensembl_ID
 
 a = dat
 a = a[,-1]
-##逆转 log
+
 a = as.matrix(2^a - 1)
 
 head(a[,1:4])
