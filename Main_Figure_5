@@ -15,6 +15,26 @@ library(GSVA)
 ## Figure 5a:
 # No code has been provided for this figure since it was created with BioRender.
 
+## Figure 5b (DONE)
+VlnPlot(combination_therapy_responder_seurat,
+        features = "mac_APOE_signature", split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
+
+## Figure 5c (DONE)
+VlnPlot(myeloid_chem_responder_seurat_all, split.by = 'treatment_state', 
+        features = 'mac_APOE_signature',cols = c('tomato','dodgerblue1'), sort = 'decreasing') + geom_boxplot(width = 0.2, fill = 'white')
+
+## Figure 5d (DONE)
+VlnPlot(combination_therapy_responder_seurat,
+        features = "myeloid_inflammatory_signature", split.by = 'treatment_state', sort = 'increasing', 
+        cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
+
+## Figure 5e (DONE)
+VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_signature", 
+        split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
+
+## Figure 5f - Barplot (DONE):
+## combinatorial therapy 
+Idents(
 table(myeloid_combination_therapy_responder_seurat@meta.data$myeloids_subclusters) 
 
 prop.table(table(Idents(myeloid_combination_therapy_responder_seurat)))
@@ -35,26 +55,9 @@ ggplot(Cellratio_sorted) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
         axis.title.y = element_text(size = 16))
 
-## Figure 5b (DONE)
-VlnPlot(combination_therapy_responder_seurat,
-        features = "mac_APOE_signature", split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
 
-## Figure 5c (DONE)
-VlnPlot(myeloid_chem_responder_seurat_all, split.by = 'treatment_state', 
-        features = 'mac_APOE_signature',cols = c('tomato','dodgerblue1'), sort = 'decreasing') + geom_boxplot(width = 0.2, fill = 'white')
-
-## Figure 5d (DONE)
-VlnPlot(combination_therapy_responder_seurat,
-        features = "myeloid_inflammatory_signature", split.by = 'treatment_state', sort = 'increasing', 
-        cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
-
-## Figure 5e (DONE)
-VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_signature", 
-        split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
-
-## Figure 5f
-
-## Figure 5g
+## Figure 5g - Barplot:
+### Palicitaxel monotherapy
 
 ## Figure 5h (DONE):
 jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
