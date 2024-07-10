@@ -1,4 +1,4 @@
-### loading the required library:
+### loading the required R packages:
 library(tidyverse)
 library(Seurat)
 library(scRNAtoolVis)
@@ -6,13 +6,14 @@ library(ggplot2)
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library(UCell)
+library(survival)
+library(survminer)
+library(GSVA)
 
-### need to pre-process the scRNA-seq data of Zhang et al. (2021) first
+### Need to pre-process the scRNA-seq data of Zhang et al. (2021) first
 
 ## Figure 5a:
 # No code has been provided for this figure since it was created with BioRender.
-
-
 
 table(myeloid_combination_therapy_responder_seurat@meta.data$myeloids_subclusters) 
 
