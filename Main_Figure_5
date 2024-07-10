@@ -1,7 +1,9 @@
 ### loading the required library:
 library(tidyverse)
 library(Seurat)
-library
+library(scRNAtoolVis)
+library(ggplot2)
+### need to pre-process the scRNA-seq data of Zhang et al. (2021) first
 
 ## Figure 5a:
 # No code has been provided for this figure since it was created with BioRender.
