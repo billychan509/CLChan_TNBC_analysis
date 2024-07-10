@@ -21,7 +21,6 @@ Cellratio <- as.data.frame(Cellratio)
 Cellratio_sorted <- Cellratio[c(3, 4, 1, 2),]
 rownames(Cellratio_sorted) <- c(1,2,3,4)
 
-library(ggplot2)
 ggplot(Cellratio_sorted) + 
   geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
   theme_classic() +
@@ -31,14 +30,22 @@ ggplot(Cellratio_sorted) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
         axis.title.y = element_text(size = 16))
 
+## Figure 5b (DONE)
+VlnPlot(combination_therapy_responder_seurat,
+        features = "mac_APOE_signature", split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
 
-## Figure 5b
+## Figure 5c (DONE)
+VlnPlot(myeloid_chem_responder_seurat_all, split.by = 'treatment_state', 
+        features = 'mac_APOE_signature',cols = c('tomato','dodgerblue1'), sort = 'decreasing') + geom_boxplot(width = 0.2, fill = 'white')
 
-## Figure 5c
+## Figure 5d (DONE)
+VlnPlot(combination_therapy_responder_seurat,
+        features = "myeloid_inflammatory_signature", split.by = 'treatment_state', sort = 'increasing', 
+        cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
 
-## Figure 5d
-
-## Figure 5e
+## Figure 5e (DONE)
+VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_signature", 
+        split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
 
 ## Figure 5f
 
@@ -52,8 +59,17 @@ ggplot(Cellratio_sorted) +
 
 ## Figure 5k:
 
-## Figure 5l
+## Figure 5l:
 
+GO_results <- enrichGO(gene = c("CCL2","CCL3","CCL4","CCL5","CCL3L1",phagocytosis_genes), 
+                       OrgDb = "org.Hs.eg.db", 
+                       keyType = "SYMBOL", ont = "BP",
+                       pvalueCutoff = 0.05,  ## setting p-value
+                       qvalueCutoff = 0.05)  ## setting q-value
+plot(barplot(GO_results, showCategory = c("positive regulation of phagocytosis","T cell chemotaxis",
+                                          "natural killer cell chemotaxis","granulocyte chemotaxis","neutrophil chemotaxis",
+                                          'monocyte chemotaxis','macrophage chemotaxis'), 
+             font.size = 13.5, title = "Enriched Biological processes \n(FOLR2_high mac)"))
 ## Figure 5m
 
 ## Figure 5n:
