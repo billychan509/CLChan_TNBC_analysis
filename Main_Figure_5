@@ -55,7 +55,20 @@ VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_sign
 
 ## Figure 5g
 
-## Figure 5h
+## Figure 5h (DONE):
+jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
+          gene =  c("IGF1", "LYZ", "CSTB", "CTSD", "CTSZ", "CTSB", "CTSL", "CTSS",
+                    "CALR", "CREG1", "NPC2", "CD63", "SDCBP", "PSAP", "SPP1"),
+          rescale = T,
+          rescale.max = 5,
+          rescale.min = -5,
+          point.geom = T,
+          anno = T,
+          id = "idents",
+          ytree = F,
+          xtree = T,
+          cluster.order = c('FOLR2_high_mac','FOLR2_low_mac'),
+          dot.col = c("#0099CC",'white', "red"))  
 
 ## Figure 5i
 
@@ -97,7 +110,9 @@ plot(barplot(GO_results, showCategory = c("positive regulation of phagocytosis",
                                           "natural killer cell chemotaxis","granulocyte chemotaxis","neutrophil chemotaxis",
                                           'monocyte chemotaxis','macrophage chemotaxis'), 
              font.size = 13.5, title = "Enriched Biological processes \n(FOLR2_high mac)"))
+
 ## Figure 5m
+
 
 ## Figure 5n:
 # No code has been provided for this figure since it was created with BioRender.
