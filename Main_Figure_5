@@ -64,6 +64,7 @@ VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_sign
 ## Figure 5k:
 
 ## Figure 5l:
+phagocytosis_genes <- c("FCGR1A", "FCGR2A","FCGR3A","TLR2", "TLR4", "NCF2", "NCF4", "DOCK2")
 
 GO_results <- enrichGO(gene = c("CCL2","CCL3","CCL4","CCL5","CCL3L1",phagocytosis_genes), 
                        OrgDb = "org.Hs.eg.db", 
