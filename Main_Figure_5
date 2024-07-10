@@ -3,6 +3,10 @@ library(tidyverse)
 library(Seurat)
 library(scRNAtoolVis)
 library(ggplot2)
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(UCell)
+
 ### need to pre-process the scRNA-seq data of Zhang et al. (2021) first
 
 ## Figure 5a:
