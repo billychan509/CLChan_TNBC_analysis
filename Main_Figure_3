@@ -4,6 +4,7 @@ library(grid)
 library(UCell)
 library(GSVA)
 library(CellChat)
+library(tidyverse)
 
 ## Pre-processing of scRNA seq data of Wu et al. (2021) is needed before printing the Figure 3a - 3d
 
@@ -40,7 +41,6 @@ AverageHeatmap(object = NK_T_cells_seurat_CD8_T_cell,
                htCol = c("blue","white","red2"))
 
 # Figure 3c:
-
 NK_T_cells_seurat_CD8_T_cell <- AddModuleScore_UCell(NK_T_cells_seurat_CD8_T_cell,
                                    features = list(c("CTLA4","PDCD1","TIGIT","HAVCR2","LAYN","LAG3")))
 view(NK_T_cells_seurat_CD8_T_cell@meta.data) ## check the column no. that correspondes to the  column with the name 'signature1_Ucell'
@@ -60,9 +60,8 @@ FeaturePlot(NK_T_cells_seurat_CD8_T_cell,
             features = "Effector_molecule",  
             cols = c("grey", "firebrick1"), split.by = "IHC")
 
-#####################################################################
-
 ## From Figure 3e to 3j, prior processing of TCGA-BRCA bulk RNA seq data is necessary:
+
 ## First, define the relevant gene sets:
 mac_FABP5_refined_genes <- c("FABP5", "SPP1", "PLIN2", "SCARB2", "CTSL", "SLC11A1", "BRI3", "LHFPL2", "GPNMB", "GM2A",
 "RNASE1", "TIMP2", "MSR1", "LAMP", "NUPR1", "FNIP2", "CTSD", "APOC1", "CSTB", "ACP5", "RALA")
