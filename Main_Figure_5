@@ -59,11 +59,33 @@ VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_sign
 
 ## Figure 5i
 
-## Figure 5j:
+## Figure 5j (DONE):
+jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
+          gene = c("CCL2","CCL3","CCL4","CCL5","CCL3L1"),
+          rescale = T,
+          rescale.max = 5,
+          rescale.min = -5,
+          point.geom = F,
+          anno = T,
+          id = "idents",
+          ytree = F,
+          xtree = F,
+          dot.col = c("#0099CC",'white', "red")) 
 
-## Figure 5k:
+## Figure 5k (DONE):
+jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
+          gene = c("FCGR1A", "FCGR2A","FCGR3A","TLR2", "TLR4", "NCF2", "NCF4", "DOCK2"),
+          rescale = T,
+          rescale.max = 5,
+          rescale.min = -5,
+          point.geom = F,
+          anno = T,
+          id = "idents",
+          ytree = F,
+          xtree = F,
+          dot.col = c("#0099CC",'white', "red")) 
 
-## Figure 5l:
+## Figure 5l (DONE):
 phagocytosis_genes <- c("FCGR1A", "FCGR2A","FCGR3A","TLR2", "TLR4", "NCF2", "NCF4", "DOCK2")
 
 GO_results <- enrichGO(gene = c("CCL2","CCL3","CCL4","CCL5","CCL3L1",phagocytosis_genes), 
