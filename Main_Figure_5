@@ -1,3 +1,8 @@
+### loading the required library:
+library(tidyverse)
+library(Seurat)
+library
+
 ## Figure 5a:
 # No code has been provided for this figure since it was created with BioRender.
 
@@ -6,9 +11,9 @@
 table(myeloid_combination_therapy_responder_seurat@meta.data$myeloids_subclusters) 
 
 prop.table(table(Idents(myeloid_combination_therapy_responder_seurat)))
-table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state) #各组不同细胞群细胞数
+table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state) 
 
-Cellratio <- prop.table(table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2)#计算各组样本不同细胞群比例
+Cellratio <- prop.table(table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2) # calculate the proportion of different cell types 
 Cellratio <- as.data.frame(Cellratio)
 
 Cellratio_sorted <- Cellratio[c(3, 4, 1, 2),]
@@ -23,3 +28,31 @@ ggplot(Cellratio_sorted) +
   theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
         axis.title.y = element_text(size = 16))
+
+
+## Figure 5b
+
+## Figure 5c
+
+## Figure 5d
+
+## Figure 5e
+
+## Figure 5f
+
+## Figure 5g
+
+## Figure 5h
+
+## Figure 5i
+
+## Figure 5j:
+
+## Figure 5k:
+
+## Figure 5l
+
+## Figure 5m
+
+## Figure 5n:
+# No code has been provided for this figure since it was created with BioRender.
