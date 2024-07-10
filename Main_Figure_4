@@ -6,6 +6,7 @@ library(GSVA)
 library(iTALK)
 library(survival)
 library(survminer) 
+
 #### Figure 4: 
 ##NOTE: Need preprocessing of RNA-seq data of the basal-like breast cancer patients from the TCGA-BRCA cohort first!!!! This is important for subsequebt correlaton analysis and K-M survival analysis
 
@@ -105,6 +106,8 @@ for(comm_type in comm_list){
   res<-rbind(res,res_cat)} ### Obtain the LR Plot for checkpoint for Figure .4c
 
 # Figure 4d:
+### Conduct the Copy number variation analysis (CNV) analysis first using copykat package (Gao et al., 2022):
+
 Idents(epithelial_cell_seurat_filtered) <- "IHC"
 DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", split.by = "ploidy",
         label = F, repel = T) + theme(text = element_text(face="bold")) +
