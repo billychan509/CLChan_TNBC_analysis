@@ -75,6 +75,65 @@ jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
           dot.col = c("#0099CC",'white', "red"))  
 
 ## Figure 5i
+## Pre-processing of TCGA-BRCA bulk-RNA seq data is needed before making Figure 5i
+deg_list_FOLR2_mac = list("FOLR2_mac_signature" = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
+                                                   'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
+                                                   "MMP9","ENPP2","PLA2G2D","IGF1"))
+
+X=as.matrix(exprSet_basal)
+es.max_spearman <- gsva(X, deg_list_FOLR2_mac, min.sz > 1,
+                        mx.diff=FALSE, verbose=T, 
+                        parallel.sz=4)
+
+es.max_spearman <- t(es.max_spearman)
+es.max_spearman <- as.data.frame(es.max_spearman)
+
+ subset = paste0('FOLR2_mac_signature')
+  v = as.numeric(es.max_spearman[,"FOLR2_mac_signature"]) 
+  sub_group <- ifelse( v < 0,"low","high") 
+  table(sub_group) 
+  phe$sub_group=sub_group
+  # Fit survival curves
+  require("survival")
+  fit <- survfit(Surv(time, event) ~ sub_group, data = phe)
+  library("survminer")
+  survp <- ggsurvplot(fit, data = phe,
+                      surv.median.line = "hv", # Add medians survival
+                      pval = TRUE, # Add p-value and tervals 
+                      conf.int = TRUE, # Add the 95% confidence band
+                      risk.table = TRUE, # Add risk table
+                      tables.height = 0.2,
+                      tables.theme = theme_cleantable(),
+                      palette = c("red","blue"),
+                      ggtheme = theme_bw(),
+                      title = subset)
+
+subset = paste0("FOLR2_mac_signature")
+  v = as.numeric(es.max_spearman[,'FOLR2_mac_signature'])   
+  phe$v <- v
+  head(phe)
+  sur.cut <- surv_cutpoint(phe,
+                           time= 'time',
+                           event = 'event',
+                           variables = 'v',
+                           progressbar = T,
+                           minprop = 0.3)
+  sur.cat <- surv_categorize(sur.cut)
+  head(sur.cat)
+  sfit <- survfit(Surv(time, event) ~ v, data = sur.cat)
+  
+  p_surv_cut <- ggsurvplot(sfit, data = phe,
+                           surv.median.line = "hv", # Add medians survival
+                           pval = TRUE,             # Add p-value and tervals 
+                           conf.int = TRUE,        # Add the 95% confidence band
+                           risk.table = TRUE,      # Add risk table
+                           tables.height = 0.25,
+                           tables.theme = theme_cleantable(),
+                           palette = c("red","blue"),
+                           ggtheme = theme_bw(),
+                           title = "FOLR2_mac_signature")
+  print(p_surv_cut) ### This gives Fig. 5i
+
 
 ## Figure 5j (DONE):
 jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
