@@ -32,20 +32,32 @@ VlnPlot(combination_therapy_responder_seurat,
 VlnPlot(myeloid_chem_responder_seurat_all, features = "myeloid_inflammatory_signature", 
         split.by = 'treatment_state', sort = 'increasing', cols = c('tomato','dodgerblue1')) + geom_boxplot(width = 0.2, fill = 'white') ### ylab is added using notability manually
 
-## Figure 5f - Barplot (DONE):
-## combinatorial therapy 
-Idents(
-table(myeloid_combination_therapy_responder_seurat@meta.data$myeloids_subclusters) 
+## Figure 5f - stacked barplot (combinatorial therapy) (DONE):
 
+myeloid_combination_therapy_responder_seurat <- myeloid_combination_therapy_responder_seurat %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.04) %>%
+  RunUMAP(dims = 1:50, reduction='pca')
+
+### When the resolution = 0.04, the cluster 0 was chosen as mac_APOE due to the high expression of APOE gene:
+myeloid_combination_therapy_responder_seurat@meta.data[myeloid_combination_therapy_responder_seurat@meta.data$RNA_snn_res.0.04 == 0, "myeloid_subclusters"] <- "mac_APOE"
+myeloid_combination_therapy_responder_seurat@meta.data[myeloid_combination_therapy_responder_seurat@meta.data$RNA_snn_res.0.04 == 1, "myeloid_subclusters"] <- "non_mac_APOE"
+
+table(myeloid_combination_therapy_responder_seurat@meta.data$myeloid_subclusters) 
+
+Idents(myeloid_combination_therapy_responder_seurat) <- "myeloid_subclusters"
 prop.table(table(Idents(myeloid_combination_therapy_responder_seurat)))
+
 table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state) 
 
-Cellratio <- prop.table(table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2) # calculate the proportion of different cell types 
+Cellratio <- prop.table(table(Idents(myeloid_combination_therapy_responder_seurat), 
+                              myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2)#计算各组样本不同细胞群比例
 Cellratio <- as.data.frame(Cellratio)
 
 Cellratio_sorted <- Cellratio[c(3, 4, 1, 2),]
 rownames(Cellratio_sorted) <- c(1,2,3,4)
 
+library(ggplot2)
 ggplot(Cellratio_sorted) + 
   geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
   theme_classic() +
@@ -54,6 +66,7 @@ ggplot(Cellratio_sorted) +
   theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
         axis.title.y = element_text(size = 16))
+
 
 
 ## Figure 5g - Barplot:
@@ -74,7 +87,7 @@ jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
           cluster.order = c('FOLR2_high_mac','FOLR2_low_mac'),
           dot.col = c("#0099CC",'white', "red"))  
 
-## Figure 5i
+## Figure 5i (DONE)
 ## Pre-processing of TCGA-BRCA bulk-RNA seq data is needed before making Figure 5i
 deg_list_FOLR2_mac = list("FOLR2_mac_signature" = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
                                                    'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
