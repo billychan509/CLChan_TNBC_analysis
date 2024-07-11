@@ -47,11 +47,11 @@ table(myeloid_combination_therapy_responder_seurat@meta.data$myeloid_subclusters
 
 Idents(myeloid_combination_therapy_responder_seurat) <- "myeloid_subclusters"
 prop.table(table(Idents(myeloid_combination_therapy_responder_seurat)))
-
 table(Idents(myeloid_combination_therapy_responder_seurat), myeloid_combination_therapy_responder_seurat$treatment_state) 
 
 Cellratio <- prop.table(table(Idents(myeloid_combination_therapy_responder_seurat), 
-                              myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2)#计算各组样本不同细胞群比例
+                              myeloid_combination_therapy_responder_seurat$treatment_state), margin = 2) 
+
 Cellratio <- as.data.frame(Cellratio)
 
 Cellratio_sorted <- Cellratio[c(3, 4, 1, 2),]
@@ -65,12 +65,50 @@ ggplot(Cellratio_sorted) +
   scale_fill_manual(values = c("firebrick1",'dodgerblue')) +
   theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
-        axis.title.y = element_text(size = 16))
-
-
+        axis.title.y = element_text(size = 16)) ## This gives Figure 5f
 
 ## Figure 5g - Barplot:
 ### Palicitaxel monotherapy
+
+myeloid_chem_responder_seurat_all <- myeloid_chem_responder_seurat_all %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.8) %>%
+  RunUMAP(dims = 1:50, reduction='pca')
+#0.8 resolution adopted
+myeloid_chem_responder_seurat_all@meta.data$myeloid_subtypes <- "mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 15, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 2, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 7, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 13, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 8, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 6, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 14, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 0, "myeloid_subtypes"] <- "non_mac_APOE"
+myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 3, "myeloid_subtypes"] <- "non_mac_APOE"
+
+table(myeloid_chem_responder_seurat_all@meta.data$myeloid_subtypes) 
+
+Idents(myeloid_chem_responder_seurat_all) <- "myeloid_subtypes"
+prop.table(table(Idents(myeloid_chem_responder_seurat_all)))
+
+table(Idents(myeloid_chem_responder_seurat_all), myeloid_chem_responder_seurat_all$treatment_state) 
+
+Cellratio <- prop.table(table(Idents(myeloid_chem_responder_seurat_all), 
+                              myeloid_chem_responder_seurat_all$treatment_state), margin = 2)#计算各组样本不同细胞群比例
+Cellratio <- as.data.frame(Cellratio)
+
+Cellratio_sorted <- Cellratio[c(3, 4, 1, 2),]
+rownames(Cellratio_sorted) <- c(1,2,3,4)
+
+library(ggplot2)
+ggplot(Cellratio_sorted) + 
+  geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
+  theme_classic() +
+  labs(x='', y = 'Ratio', fill = "myeloid subtypes", size = 20) +
+  scale_fill_manual(values = c("firebrick1",'dodgerblue')) +
+  theme(panel.border = element_rect(fill= NA, color="black", size=0, linetype="solid")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
+        axis.title.y = element_text(size = 16))
 
 ## Figure 5h (DONE):
 jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
