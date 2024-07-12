@@ -1,16 +1,36 @@
 ## Supplementary Figure S2:
-## Conduct Cell-cell communication analysis with CellChat  and iTalk R packages first!!
+## NOTE: Conduct Cell-cell communication analysis with CellChat and iTalk R packages first!!
+## Script used in this analysis was modified from the codes deposited on https://zhilongjia.github.io/scRNA/cellchat.html
+
+###  Loading the required R packages first:
+library(CellChat)
+library(Seurat)
+library(NMF)
+library(ggalluvial)
+library(iTALK)
+
+
 
 # Supplementary Figure S2A:
+netAnalysis_contribution(cellchat_contact, signaling = "MHC-I")
 
 # Supplementary Figure S2B:
+netAnalysis_contribution(cellchat_secreted, signaling = "MIF")
 
 # Supplementary Figure S2C:
-
-# Supplementary Figure S2D:
-
+netAnalysis_signalingRole_network(cellchat_secreted, signaling = "MIF", 
+                                  width = 8, height = 4, font.size = 6, color.heatmap  = 'Reds')
+# Supplementary Figure S2D (MHC-I signal): 
+netAnalysis_signalingRole_network(cellchat_contact, signaling = "MHC-I", 
+                                  width = 8, height = 4, font.size = 6, color.heatmap  = 'Reds')
 # Supplementary Figure S2E:
 
 # Supplementary Figure S2F:
+ht1 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "outgoing", color.heatmap = 'Reds', font.size = 3.5)
+ht2 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "incoming", color.heatmap = 'Reds', font.size = 3.5)
+ht1 + ht2
 
 # Supplementary Figure S2G:
+ht3 <- netAnalysis_signalingRole_heatmap(cellchat_contact, pattern = "outgoing", color.heatmap = 'Reds', font.size = 3.5)
+ht4 <- netAnalysis_signalingRole_heatmap(cellchat_contact, pattern = "incoming", color.heatmap = 'Reds', font.size = 3.5)
+ht3 + ht4
