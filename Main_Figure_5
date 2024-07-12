@@ -190,7 +190,8 @@ subset = paste0("FOLR2_mac_signature")
                            palette = c("red","blue"),
                            ggtheme = theme_bw(),
                            title = "FOLR2_mac_signature")
-  print(p_surv_cut) ### This gives Fig. 5i
+  
+print(p_surv_cut) ### This gives Fig. 5i
 
 
 ## Figure 5j (DONE):
@@ -235,18 +236,48 @@ plot(barplot(GO_results, showCategory = c("positive regulation of phagocytosis",
 ## Figure 5m: 
 ### Defining a list containing different chemokines genes:
 deg_chemokine_list <- list("FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
-                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3","MMP9","ENPP2","PLA2G2D","IGF1"),
-                            "CXCL11" = c("CXCL11"), "CXCL16" = c("CXCL16"), "CXCL9" = c("CXCL9"),
-                            "CCL3" = c("CCL3"), "CCL4" = c("CCL4"), "CCL5" = c("CCL5"), 
-                            "CXCL10" = c("CXCL10"), "CXCL3" = c("CXCL3"), "CXCL2" = c("CXCL2"),
-                            "CCL2" = c("CCL2"))
+                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
+                             "MMP9","ENPP2","PLA2G2D","IGF1"),
+                              "CXCL11" = c("CXCL11"),
+                              "CXCL16" = c("CXCL16"),
+                              "CXCL9" = c("CXCL9"),
+                              "CCL3L1" = c("CCL3L1"),
+                              "CCL3" = c("CCL3"),
+                              "CCL4" = c("CCL4"),
+                              "CCL5" = c("CCL5"), 
+                              "CXCL10" = c("CXCL10"),
+                              "CXCL3" = c("CXCL3"),
+                              "CXCL2" = c("CXCL2"),
+                              "CCL2" = c("CCL2"))
+####load() !!!!!!!!
 
-es.max_spearman_chemokine <- t(es.max_spearman_chemokine)
+X=as.matrix(exprSet_basal)
+es.max_spearman_chemokine <- gsva(X, deg_chemokine_list, min.sz > 1,
+                                 mx.diff=FALSE, verbose=T, 
+                                 parallel.sz=4)
+
 es.max_spearman_chemokine <- as.data.frame(es.max_spearman_chemokine)
 
 color_palette <- colorRampPalette(c("#2166ac", "#f7f7f7", "#b2182b"))(100)
+
 corrplot(cor(es.max_spearman_chemokine, method = 'spearman'), method = 'circle', type = 'full',
-         tl.col = 'black', tl.srt = 45, col  =color_palette)
+         tl.col = 'black', tl.srt = 45, col  =color_palette) ## This gives the first figure of Figure 5m 
+
+### Defining a list containing different phagocytosis-related genes:
+deg_phagocytosis_list <- list("FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
+                        'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3","MMP9","ENPP2","PLA2G2D","IGF1"),
+                         "FCGR1A" = c("FCGR1A"),"TLR2" = c("TLR2"),"TLR4" = c("TLR4"), 
+                         "NCF2" = c("NCF2"),"NCF4" = c("NCF4"),"DOCK2" = c("DOCK2"), "ELMO1" = c("ELMO1"))
+
+X=as.matrix(exprSet_basal)
+es.max_spearman_phagocytosis <- gsva(X, deg_phagocytosis_list, min.sz > 1,
+                                 mx.diff=FALSE, verbose=T, parallel.sz=4)
+
+es.max_spearman_phagocytosis <- t(es.max_spearman_phagocytosis)
+
+color_palette <- colorRampPalette(c("#2166ac", "#f7f7f7", "#b2182b"))(100)
+corrplot(cor(es.max_spearman_phagocytosis, method = 'spearman'), method = 'circle', type = 'full',
+         tl.col = 'black', tl.srt = 45, col  =color_palette) ## This gives the second figure of the figure 5m
 
 ## Figure 5n:
 # No code has been provided for this figure since it was created with BioRender.
