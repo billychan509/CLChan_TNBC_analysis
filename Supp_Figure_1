@@ -56,6 +56,19 @@ DimHeatmap(merged_seurat_obj_filtered, dims = 37:48, cells = 500, balanced = TRU
 DimHeatmap(merged_seurat_obj_filtered, dims = 49:50, cells = 500, balanced = TRUE)
 
 ## Supplementary Figure S1i
+CAF_markers_0.4 <- FindAllMarkers(CAF_seurat_filtered, only.pos = T, 
+                                             min.pct = 0.25, logfc.threshold = 0.25,
+                                             return.thresh = 0.05)
+
+mCAF_gene <- CAF_markers_0.4[CAF_markers_0.4$cluster =="mCAF" & CAF_markers_0.4$p_val_adj < 0.05, "gene"]
+
+GO_results_mCAF  <- enrichGO(gene = mCAF_gene, 
+                       OrgDb = "org.Hs.eg.db", 
+                       keyType = "SYMBOL", ont = "BP",
+                       pvalueCutoff = 0.05,#设定p值阈值
+                       qvalueCutoff = 0.05)#设定q值阈值
+
+dotplot(GO_results_mCAF) ## Supplementary Figure S1i
 
 ## Supplementary Figure S1j
 
