@@ -4,7 +4,8 @@ library(Seurat)
 library(scRNAtoolVis)
 library(ggplot2)
 library(clusterProfiler)
-library(org.Hs.eg.db)
+library(org.Hs.eg.db) ## Loading the human gene database
+library(AnnotationDbi)
 library(UCell)
 library(survival)
 library(survminer)
@@ -16,10 +17,10 @@ library(dichromat)
 ###### Supplementary Figure S1:
 ## Need prior processing of scRNA-seq data of Wu et al. (2021) first
 
-# Supplementary Figure S1A:
+# Supplementary Figure S1a:
 # No code has been provided for this figure since it was created with BioRender.
 
-# Supplementary Figure S1B:
+# Supplementary Figure S1b:
 load()!!!!!!!
 Idents(merged_seurat_obj) <- "patient"
 plot1 <- FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") +
@@ -28,13 +29,34 @@ plot2 <-FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "m
   geom_smooth (method = 'lm') 
 plot1 + plot2 ## This gives Figure S1B
 
-## Suppleementary Figure S1C:
+## Supplementary Figure S1c:
 Idents(merged_seurat_obj) <- "cell.type"
 VlnPlot(merged_seurat_obj, features = c("nCount_RNA", "nFeature_RNA", "mitoPercent"),
         ncol = 3, pt.size = 0) 
 
-## Suppleementary Figure S1D:
+## Supplementary Figure S1d:
 Idents(merged_seurat_obj) <- "patient"
 VlnPlot(merged_seurat_obj, features = c("nCount_RNA", "nFeature_RNA", "mitoPercent"),
         ncol = 3, pt.size = 0) 
+
+## Supplementary Figure S1e:
+ElbowPlot(merged_seurat_obj , reduction='pca', ndims = 50)
+
+## Supplementary Figure S1f:
+DimPlot(merged_seurat_obj , reduction = "pca", label = FALSE,
+        group.by = "patient")
+
+## Supplementary Figure S1g:
+DimHeatmap(merged_seurat_obj_filtered, dims = 1:12, cells = 500, balanced = TRUE)
+DimHeatmap(merged_seurat_obj_filtered, dims = 13:24, cells = 500, balanced = TRUE)
+
+## Supplementary Figure S1h:
+DimHeatmap(merged_seurat_obj_filtered, dims = 25:36, cells = 500, balanced = TRUE)
+DimHeatmap(merged_seurat_obj_filtered, dims = 37:48, cells = 500, balanced = TRUE)
+DimHeatmap(merged_seurat_obj_filtered, dims = 49:50, cells = 500, balanced = TRUE)
+
+## Supplementary Figure S1i
+
+## Supplementary Figure S1j
+
 
