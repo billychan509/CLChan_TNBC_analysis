@@ -1,9 +1,29 @@
 ### Loading the required libraries:
+library(tidyverse)
+library(Seurat)
+library(scRNAtoolVis)
+library(ggplot2)
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(UCell)
+library(survival)
+library(survminer)
+library(GSVA)
+library(corrplot)
+library(ggcorrplot)
+library(dichromat)
 
-
-# Supplementary Figure S1:
+###### Supplementary Figure S1:
+## Need prior processing of scRNA-seq data of Wu et al. (2021) first
 
 # Supplementary Figure S1A:
 # No code has been provided for this figure since it was created with BioRender.
 
 # Supplementary Figure S1B:
+load()!!!!!!!
+Idents(merged_seurat_obj) <- "patient"
+plot1 <- FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") +
+  geom_smooth (method = 'lm') 
+plot2 <-FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "mitoPercent") +
+  geom_smooth (method = 'lm') 
+plot1 + plot2 ## This gives Figure S1B
