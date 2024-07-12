@@ -235,13 +235,12 @@ plot(barplot(GO_results, showCategory = c("positive regulation of phagocytosis",
 
 ### Defining the list containing different chemokines genes:
 
-deg_chemokine_list <- list(
-  "FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
-                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
-                             "MMP9","ENPP2","PLA2G2D","IGF1"),
-  "CXCL11" = c("CXCL11"), "CXCL16" = c("CXCL16"), "CXCL9" = c("CXCL9"),
-  "CCL3" = c("CCL3"), "CCL4" = c("CCL4"), "CCL5" = c("CCL5"), 
-  "CXCL10" = c("CXCL10"), "CXCL3" = c("CXCL3"), "CXCL2" = c("CXCL2"),"CCL2" = c("CCL2"))
+deg_chemokine_list <- list("FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
+                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3","MMP9","ENPP2","PLA2G2D","IGF1"),
+                            "CXCL11" = c("CXCL11"), "CXCL16" = c("CXCL16"), "CXCL9" = c("CXCL9"),
+                            "CCL3" = c("CCL3"), "CCL4" = c("CCL4"), "CCL5" = c("CCL5"), 
+                            "CXCL10" = c("CXCL10"), "CXCL3" = c("CXCL3"), "CXCL2" = c("CXCL2"),
+                            "CCL2" = c("CCL2"))
 
 color_palette <- colorRampPalette(c("#2166ac", "#f7f7f7", "#b2182b"))(100)
 corrplot(cor(es.max_spearman_IL, method = 'spearman'), method = 'circle', type = 'full',
