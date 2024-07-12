@@ -9,6 +9,7 @@ library(NMF)
 library(ggalluvial)
 library(iTALK)
 
+### Further processing of the loaded data:
 
 
 # Supplementary Figure S2A:
@@ -24,13 +25,16 @@ netAnalysis_signalingRole_network(cellchat_secreted, signaling = "MIF",
 netAnalysis_signalingRole_network(cellchat_contact, signaling = "MHC-I", 
                                   width = 8, height = 4, font.size = 6, color.heatmap  = 'Reds')
 # Supplementary Figure S2E:
+netAnalysis_signalingRole_scatter(cellchat) ## bubble plot illustrating the incoming and outgoing interaction strength between clusters 
 
 # Supplementary Figure S2F:
-ht1 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "outgoing", color.heatmap = 'Reds', font.size = 3.5)
-ht2 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "incoming", color.heatmap = 'Reds', font.size = 3.5)
+ht1 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "outgoing", font.size = 3.5)
+ht2 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "incoming", font.size = 3.5)
 ht1 + ht2
 
 # Supplementary Figure S2G:
 ht3 <- netAnalysis_signalingRole_heatmap(cellchat_contact, pattern = "outgoing", color.heatmap = 'Reds', font.size = 3.5)
 ht4 <- netAnalysis_signalingRole_heatmap(cellchat_contact, pattern = "incoming", color.heatmap = 'Reds', font.size = 3.5)
 ht3 + ht4
+
+# Supplementary Figure S2h:
