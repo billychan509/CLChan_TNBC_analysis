@@ -20,6 +20,23 @@ CellChatDB.ss <- subsetDB(CellChatDB, search = c("Secreted Signaling"),
                           key='annotation')
 cellchat_secreted@DB <- CellChatDB.ss
 
+## define a function to process Cellchat obj:
+cellchat_processing <- function(cellchat) {
+  cellchat <- subsetData(cellchat) 
+  cellchat <- identifyOverExpressedGenes(cellchat)
+  cellchat <- identifyOverExpressedInteractions(cellchat)
+  cellchat <- projectData(cellchat, PPI.human)
+  cellchat <- computeCommunProb(cellchat, raw.use = TRUE)    
+  cellchat <- filterCommunication(cellchat, min.cells = 10)
+  cellchat<- computeCommunProbPathway(cellchat)
+  cellchat <- aggregateNet(cellchat)
+  return(cellchat)
+}
+
+cellchat_contact <- cellchat_processing(cellchat_contact)
+cellchat_secreted <- cellchat_processing(cellchat_secreted)
+
+
 # Supplementary Figure S2A:
 netAnalysis_contribution(cellchat_contact, signaling = "MHC-I")
 
@@ -39,25 +56,14 @@ netAnalysis_signalingRole_scatter(cellchat) ## bubble plot illustrating the inco
 
 ## defining a function to process the CellChat object first:
 
-cellchat_processing <- function(cellchat) {
-  cellchat <- subsetData(cellchat) 
-  cellchat <- identifyOverExpressedGenes(cellchat)
-  cellchat <- identifyOverExpressedInteractions(cellchat)
-  cellchat <- projectData(cellchat, PPI.human)
-  cellchat <- computeCommunProb(cellchat, raw.use = TRUE)    
-  cellchat <- filterCommunication(cellchat, min.cells = 10)
-  cellchat<- computeCommunProbPathway(cellchat)
-  cellchat <- aggregateNet(cellchat)
-  return(cellchat)
-}
 
-cellchat_secreted <- cellchat_processing(cellchat_secreted)
 
 ht1 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "outgoing", font.size = 3.5)
 ht2 <- netAnalysis_signalingRole_heatmap(cellchat_secreted, pattern = "incoming", font.size = 3.5)
 ht1 + ht2
 
 # Supplementary Figure S2G:
+cellchat_processing
 cellchat_secreted <- netAnalysis_computeCentrality(cellchat_secreted, slot.name = "netP") 
 ht3 <- netAnalysis_signalingRole_heatmap(cellchat_contact, pattern = "outgoing", color.heatmap = 'Reds', font.size = 3.5)
 ht4 <- netAnalysis_signalingRole_heatmap(cellchat_contact, pattern = "incoming", color.heatmap = 'Reds', font.size = 3.5)
