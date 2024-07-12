@@ -62,7 +62,7 @@ ggplot(Cellratio_sorted) +
   geom_bar(aes(x = Var2, y= Freq, fill = Var1, size = 1), stat = "identity" , width = 0.7, size = 0, colour ='#222222') + 
   theme_classic() +
   labs(x='', y = 'Ratio', fill = "myeloid subtypes", size = 20) +
-  scale_fill_manual(values = c("firebrick1",'dodgerblue')) +
+  scale_fill_manual(values = c("dodgerblue","firebrick1")) +
   theme(panel.border = element_rect(fill=NA,color="black", size=0, linetype="solid")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
         axis.title.y = element_text(size = 16)) ## This gives Figure 5f
