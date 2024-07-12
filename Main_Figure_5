@@ -9,9 +9,13 @@ library(UCell)
 library(survival)
 library(survminer)
 library(GSVA)
+library(corrplot)
+library(ggcorrplot)
 
 ### Need to pre-process the scRNA-seq data of Zhang et al. (2021) first
 
+### First, load the pre-processed data first:
+load("/mnt/billychan/nfs_share2/Zhang_TNBC/Zhang_Cancer_cell.RData")
 ## Figure 5a:
 # No code has been provided for this figure since it was created with BioRender.
 
@@ -67,8 +71,7 @@ ggplot(Cellratio_sorted) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 16, color = 'black'), 
         axis.title.y = element_text(size = 16)) ## This gives Figure 5f
 
-## Figure 5g - Barplot:
-### Palicitaxel monotherapy
+## Figure 5g - stacked barplot (Palicitaxel monotherapy):
 
 myeloid_chem_responder_seurat_all <- myeloid_chem_responder_seurat_all %>% 
   FindNeighbors(dims = 1:50, reduction='pca') %>%
@@ -228,8 +231,27 @@ plot(barplot(GO_results, showCategory = c("positive regulation of phagocytosis",
                                           'monocyte chemotaxis','macrophage chemotaxis'), 
              font.size = 13.5, title = "Enriched Biological processes \n(FOLR2_high mac)"))
 
-## Figure 5m
+## Figure 5m: 
 
+### Defining the list containing different chemokines genes 
+deg_chemokine_list <- list(
+  "FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
+                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
+                             "MMP9","ENPP2","PLA2G2D","IGF1"),
+  "CXCL11" = c("CXCL11"),
+  "CXCL16" = c("CXCL16"),
+  "CXCL9" = c("CXCL9"),
+  "CCL3" = c("CCL3"),
+  "CCL4" = c("CCL4"),
+  "CCL5" = c("CCL5"), 
+  "CXCL10" = c("CXCL10"),
+  "CXCL3" = c("CXCL3"),
+  "CXCL2" = c("CXCL2"),
+  "CCL2" = c("CCL2"))
+
+color_palette <- colorRampPalette(c("#2166ac", "#f7f7f7", "#b2182b"))(100)
+corrplot(cor(es.max_spearman_IL, method = 'spearman'), method = 'circle', type = 'full',
+         tl.col = 'black', tl.srt = 45, col  =color_palette)
 
 ## Figure 5n:
 # No code has been provided for this figure since it was created with BioRender.
