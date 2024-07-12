@@ -108,11 +108,15 @@ for(comm_type in comm_list){
 # Figure 4d:
 ### Conduct the Copy number variation analysis (CNV) analysis first using copykat package (Gao et al., 2021):
 
+epithelial_cell_seurat_filtered <- epithelial_cell_seurat_filtered %>% 
+    FindNeighbors(dims = 1:50, reduction='pca') %>%
+    FindClusters(res= 0.05) %>%
+    RunUMAP(dims = 1:50, reduction='pca') ### Re-cluster the epithelial cells again before plotting the UMAP in Figure 4d and 4e
+
 Idents(epithelial_cell_seurat_filtered) <- "IHC"
 DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", split.by = "ploidy",
         label = F, repel = T) + theme(text = element_text(face="bold")) +
-  theme(legend.title=element_text(size=50, color="black")) 
-
+  theme(legend.title=element_text(size=50, color="black"))  
 
 # Figure 4e:
 DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", group.by = "ploidy_IHC",
@@ -121,7 +125,7 @@ DimPlot(epithelial_cell_seurat_filtered, reduction = "umap", group.by = "ploidy_
 
 
 # Figure 4f - 4h:
-FeaturePlot(epithelial_cell_seurat, features = "CD24", split.by = "IHC", cols = c('gray',"firebrick3"))
+FeaturePlot(epithelial_cell_seurat_filtered, features = "CD24", split.by = "IHC", cols = c('gray',"red"))
 
 
 # Figure 4i:
