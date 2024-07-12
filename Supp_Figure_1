@@ -65,11 +65,22 @@ mCAF_gene <- CAF_markers_0.4[CAF_markers_0.4$cluster =="mCAF" & CAF_markers_0.4$
 GO_results_mCAF  <- enrichGO(gene = mCAF_gene, 
                        OrgDb = "org.Hs.eg.db", 
                        keyType = "SYMBOL", ont = "BP",
-                       pvalueCutoff = 0.05,#设定p值阈值
-                       qvalueCutoff = 0.05)#设定q值阈值
+                       pvalueCutoff = 0.05,
+                       qvalueCutoff = 0.05)
 
 dotplot(GO_results_mCAF) ## Supplementary Figure S1i
 
 ## Supplementary Figure S1j
+myeloid_markers_0.4 <- FindAllMarkers(myeloid_seurat_filtered, only.pos = T, 
+                                  min.pct = 0.25, logfc.threshold = 0.25,
+                                  return.thresh = 0.05)
 
+cmc_gene <- myeloid_markers_0.4[myeloid_markers_0.4$cluster == "cmc" & myeloid_markers_0.4$p_val_adj < 0.05, "gene"]
 
+GO_results_cmc  <- enrichGO(gene = cmc_gene, 
+                       OrgDb = "org.Hs.eg.db", 
+                       keyType = "SYMBOL", ont = "BP",
+                       pvalueCutoff = 0.05,
+                       qvalueCutoff = 0.05)
+
+dotplot(GO_results_cmc) ## Supplementary Figure S1j
