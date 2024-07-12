@@ -74,8 +74,10 @@ myeloid_chem_responder_seurat_all <- myeloid_chem_responder_seurat_all %>%
   FindNeighbors(dims = 1:50, reduction='pca') %>%
   FindClusters(res= 0.8) %>%
   RunUMAP(dims = 1:50, reduction='pca')
-#0.8 resolution adopted
+#0.8 resolution was  adopted
 myeloid_chem_responder_seurat_all@meta.data$myeloid_subtypes <- "mac_APOE"
+
+### These clusters were chosesn as non mac_APOE due to the low expression of mac_APOE signature calculated by UCell package
 myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 15, "myeloid_subtypes"] <- "non_mac_APOE"
 myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 2, "myeloid_subtypes"] <- "non_mac_APOE"
 myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 7, "myeloid_subtypes"] <- "non_mac_APOE"
@@ -85,6 +87,7 @@ myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@me
 myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 14, "myeloid_subtypes"] <- "non_mac_APOE"
 myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 0, "myeloid_subtypes"] <- "non_mac_APOE"
 myeloid_chem_responder_seurat_all@meta.data[myeloid_chem_responder_seurat_all@meta.data$RNA_snn_res.0.8 == 3, "myeloid_subtypes"] <- "non_mac_APOE"
+
 
 table(myeloid_chem_responder_seurat_all@meta.data$myeloid_subtypes) 
 
