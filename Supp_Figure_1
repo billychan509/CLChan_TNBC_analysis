@@ -27,3 +27,14 @@ plot1 <- FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "
 plot2 <-FeatureScatter(merged_seurat_obj, feature1 = "nCount_RNA", feature2 = "mitoPercent") +
   geom_smooth (method = 'lm') 
 plot1 + plot2 ## This gives Figure S1B
+
+## Suppleementary Figure S1C:
+Idents(merged_seurat_obj) <- "cell.type"
+VlnPlot(merged_seurat_obj, features = c("nCount_RNA", "nFeature_RNA", "mitoPercent"),
+        ncol = 3, pt.size = 0) 
+
+## Suppleementary Figure S1D:
+Idents(merged_seurat_obj) <- "patient"
+VlnPlot(merged_seurat_obj, features = c("nCount_RNA", "nFeature_RNA", "mitoPercent"),
+        ncol = 3, pt.size = 0) 
+
