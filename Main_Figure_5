@@ -11,6 +11,7 @@ library(survminer)
 library(GSVA)
 library(corrplot)
 library(ggcorrplot)
+library(dichromat)
 
 ### Need to pre-process the scRNA-seq data of Zhang et al. (2021) first
 
@@ -232,9 +233,7 @@ plot(barplot(GO_results, showCategory = c("positive regulation of phagocytosis",
              font.size = 13.5, title = "Enriched Biological processes \n(FOLR2_high mac)"))
 
 ## Figure 5m: 
-
-### Defining the list containing different chemokines genes:
-
+### Defining a list containing different chemokines genes:
 deg_chemokine_list <- list("FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
                              'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3","MMP9","ENPP2","PLA2G2D","IGF1"),
                             "CXCL11" = c("CXCL11"), "CXCL16" = c("CXCL16"), "CXCL9" = c("CXCL9"),
@@ -242,8 +241,11 @@ deg_chemokine_list <- list("FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BL
                             "CXCL10" = c("CXCL10"), "CXCL3" = c("CXCL3"), "CXCL2" = c("CXCL2"),
                             "CCL2" = c("CCL2"))
 
+es.max_spearman_chemokine <- t(es.max_spearman_chemokine)
+es.max_spearman_chemokine <- as.data.frame(es.max_spearman_chemokine)
+
 color_palette <- colorRampPalette(c("#2166ac", "#f7f7f7", "#b2182b"))(100)
-corrplot(cor(es.max_spearman_IL, method = 'spearman'), method = 'circle', type = 'full',
+corrplot(cor(es.max_spearman_chemokine, method = 'spearman'), method = 'circle', type = 'full',
          tl.col = 'black', tl.srt = 45, col  =color_palette)
 
 ## Figure 5n:
