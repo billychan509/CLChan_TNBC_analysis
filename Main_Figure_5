@@ -133,7 +133,9 @@ jjDotPlot(object = mac_APOE_combination_therapy_responder_seurat_post_treatment,
           dot.col = c("#0099CC",'white', "red"))  
 
 ## Figure 5i (DONE)
-## Pre-processing of TCGA-BRCA bulk-RNA seq data is needed before making Figure 5i
+## Note: Pre-processing of TCGA-BRCA bulk-RNA seq data is needed before making Figure 5i and 5m:
+load("/mnt/billychan/nfs_share2/exprSet_basal.RData")
+
 deg_list_FOLR2_mac = list("FOLR2_mac_signature" = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
                                                    'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
                                                    "MMP9","ENPP2","PLA2G2D","IGF1"))
