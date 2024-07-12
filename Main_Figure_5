@@ -39,7 +39,7 @@ myeloid_combination_therapy_responder_seurat <- myeloid_combination_therapy_resp
   FindClusters(res= 0.04) %>%
   RunUMAP(dims = 1:50, reduction='pca')
 
-### When the resolution = 0.04, the cluster 0 was chosen as mac_APOE due to the high expression of APOE signature genes (As calculated by UCell R package):
+### When the resolution = 0.04, the cluster 0 was chosen as mac_APOE due to the high expression score of APOE signature genes (As calculated by UCell R package):
 myeloid_combination_therapy_responder_seurat@meta.data[myeloid_combination_therapy_responder_seurat@meta.data$RNA_snn_res.0.04 == 0, "myeloid_subclusters"] <- "mac_APOE"
 myeloid_combination_therapy_responder_seurat@meta.data[myeloid_combination_therapy_responder_seurat@meta.data$RNA_snn_res.0.04 == 1, "myeloid_subclusters"] <- "non_mac_APOE"
 
