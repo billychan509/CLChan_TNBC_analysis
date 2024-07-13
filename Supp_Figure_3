@@ -29,3 +29,9 @@ ifn_CAF_genes <- c("CXCL9","CXCL10","CXCL11","IL32")
 iCAF_genes <- c("C3","CFD")
 
 ifn_CAF_iCAF_genes <- c(ifn_CAF_genes,iCAF_genes)
+
+for (k in ifn_CAF_iCAF_genes) {
+FeaturePlot(CAF_seurat_filtered, features = k, cols = c("gray","red"))
+} 
+
+
