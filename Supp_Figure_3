@@ -1,7 +1,19 @@
+## Supplementary Figure S3:
 
+## Pre-processing of scRNA-seq data of Wu et al. (2021) is needed!
 
+### Figure S3A:
+library(Seurat)
+library(tidyverse)
 
+# Markers genes for NKT cells / T-cells (use the Seurat object NK_T_cells_seurat)
 
+NK_T_cell_marker_genes <- c("FOXP3", "IL2RA","LAG3","IKZF2","TRAC","TRBC1","TRDC","XCL1","CCR7","IL7R","PDCD1","CXCL13","IFNG","TNF","NKG7","KLRC1",
+                            "KLRB1","FCGR3A","IFIT1","IFIT2","IFIT3")
+
+for (i in NK_T_cell_marker_genes) {
+  FeaturePlot(NK_T_cells_seurat, features = i, cols = c("gray","red"))
+} ###  Figure S3A can then be generated
 
 
 
