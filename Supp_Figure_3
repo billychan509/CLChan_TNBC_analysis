@@ -5,6 +5,7 @@
 ### Figure S3A:
 library(Seurat)
 library(tidyverse)
+library(ggplot2)
 
 # Markers genes for NKT cells / T-cells (use the Seurat object NK_T_cells_seurat)
 
@@ -13,10 +14,18 @@ NK_T_cell_marker_genes <- c("FOXP3", "IL2RA","LAG3","IKZF2","TRAC","TRBC1","TRDC
 
 for (i in NK_T_cell_marker_genes) {
   FeaturePlot(NK_T_cells_seurat, features = i, cols = c("gray","red"))
-} ###  Figure S3A can then be generated
+} 
 
+### Figure S3B:
 
+matrix_CAF_marker_genes <- c("MMP11","COL1A2","COL11A1","COL8A1","COL3A1","COL12A1","COL5A2","COMP","POSTN")
 
+for (j in matrix_CAF_marker_genes) {
+FeaturePlot(CAF_seurat_filtered, features = j, cols = c("gray","red"))
+} 
 
+### Figure S3C:
+ifn_CAF_genes <- c("CXCL9","CXCL10","CXCL11","IL32")
+iCAF_genes <- c("C3","CFD")
 
-
+ifn_CAF_iCAF_genes <- c(ifn_CAF_genes,iCAF_genes)
