@@ -6,7 +6,6 @@ Idents(mac_APOE_non_responder_all_myeloid_t_combination_therapy_seurat) <- 'pati
 
 AverageHeatmap(object = mac_APOE_non_responder_all_myeloid_t_combination_therapy_seurat,
                markerGene = FOLR2_mac_genes,
-               #cluster.order = NK_T_cells_seurat_CD8_T_cell@meta.data$subtype_IHC %>% unique() %>% sort(),
                clusterAnnoName = T,
                showRowNames = T,
                row_title = "FOLR2 signature",
