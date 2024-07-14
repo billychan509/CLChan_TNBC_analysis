@@ -1,7 +1,13 @@
 ## Supplementary Figure S4:
 
 ## loading the required R packages 
-
+library(tidyverse)
+library(Seurat)
+library(ggplot2)
+library(survival)
+library(survminer)
+library(GSVA)
+library(dichromat)
 
 ## Figure S4A
 
@@ -9,12 +15,15 @@
 
 deg_myeloid_checkpt_list <- list('PD1' = c("PDCD1"), "SIRPA" = c("SIRPA"), "LILRB2" = c("LILRB2"))
 
+### Calculate the gene enrichment score of myeloid immune checkpoints  
 X=as.matrix(exprSet_basal)
 
 es.max_spearman_myeloid_checkpt <- gsva(X, deg_myeloid_checkpt_list, min.sz > 1,
                mx.diff=FALSE, verbose=T, 
                parallel.sz=4)
 
+es.max_spearman_myeloid_checkpt <- t(es.max_spearman_myeloid_checkpt)
+es.max_spearman_myeloid_checkpt <- as.data.frame(es.max_spearman_myeloid_checkpt)
 
 
 
