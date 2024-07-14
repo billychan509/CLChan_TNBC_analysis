@@ -5,6 +5,10 @@ library(iTALK)
 library(Seurat)
 library(Matrix)
 library(dplyr)
+library(ComplexHeatmap)
+library(gplots)
+library(ggplot2)
+library(copykat)
 
 epithelial_cell_seurat_filtered@meta.data$subtype <- epithelial_cell_seurat_filtered@meta.data$ploidy
 
@@ -55,7 +59,10 @@ for(comm_type in comm_list){
   res<-rbind(res,res_cat)} ### This gives the Figure S4B
 
 ## Figure S4C:
-### CNV analysis of selected patient samples:
+## CNV analysis of selected patient samples using copykat:
+# Please conduct CNV analysis using copykat R package beforehand!
+
+
 
 
 ## Figure S4D:
