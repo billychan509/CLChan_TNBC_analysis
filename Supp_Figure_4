@@ -31,8 +31,8 @@ for (i in names(deg_myeloid_checkpt_list) ) {
   # i = names(deg_list) [1]
   subset = paste0('',i)
   print(subset)
-  v = as.numeric(es.max_myeloid[,i]) #每一个亚群表达量。
-  sub_group <- ifelse( v < 0,"low","high") #如果表达量小于0的话，就定义为low。gsva处理过表达量。0.几左右
+  v = as.numeric(es.max_myeloid[,i]) 
+  sub_group <- ifelse( v < 0,"low","high") 
   table(sub_group) 
   phe$sub_group=sub_group
   # Fit survival curves
@@ -59,7 +59,7 @@ for (i in names(deg_myeloid_checkpt_list) ) {
   # i = names(deg_list) [1]
   subset = paste0(i)
   print(subset)
-  v = as.numeric(es.max_myeloid[,i]) #每一个亚群表达量。
+  v = as.numeric(es.max_myeloid[,i]) 
   phe$v <- v
   head(phe)
   sur.cut <- surv_cutpoint(phe,
