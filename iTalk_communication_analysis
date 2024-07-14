@@ -10,7 +10,7 @@ epithelial_cell_seurat_filtered@meta.data$subtype <- epithelial_cell_seurat_filt
 
 testing <- merge(myeloid_seurat_filtered, y = c(epithelial_cell_seurat_filtered))
 
-testing@meta.data$subtype %>% unique() %>% print() # Checking if it contains all the subtypes of cells
+testing@meta.data$subtype %>% unique() %>% print() #Checking if it contains all the subtypes of cells
 
 testing_TNBC <- subset(testing, idents = "TNBC")
 testing_TNBC@meta.data[testing_TNBC@meta.data$subtype == "unassigned_1", 'subtype'] <- 'U1'
@@ -54,7 +54,12 @@ for(comm_type in comm_list){
   title(comm_type)
   res<-rbind(res,res_cat)} ### This gives the Figure S4B
 
+## Figure S4C:
+### CNV analysis of selected patient samples:
 
+
+## Figure S4D:
+FeaturePlot(epithelial_cell_seurat, split.by = "IHC", features = "CD274")
 
 
 
