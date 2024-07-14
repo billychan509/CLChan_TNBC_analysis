@@ -8,6 +8,8 @@ library(survival)
 library(survminer)
 library(GSVA)
 library(iTALK)
+library(Matrix)
+library(dplyr)
 library(dichromat)
 
 ## Figure S4A
@@ -87,7 +89,16 @@ for (i in names(deg_myeloid_checkpt_list) ) {
 }  ### This gives Supplementary Figure S4A
 
 
+### Supplementary Figure S4B:
 
+### Cell-cell Communication analysis using iTalk R package:
+epithelial_cell_seurat_filtered@meta.data$subtype <- epithelial_cell_seurat_filtered@meta.data$ploidy
+testing <- merge(myeloid_seurat_filtered, y = c(epithelial_cell_seurat_filtered))
+
+Idents(testing) <- "IHC"
+testing_TNBC <- subset(testing, idents = "TNBC")
+testing_TNBC@meta.data[testing_TNBC@meta.data$subtype == "unassigned_1", 'subtype'] <- 'U1'
+testing_TNBC@meta.data[testing_TNBC@meta.data$subtype == "unassigned_2", 'subtype'] <- 'U2'
 
 
 
