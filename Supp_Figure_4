@@ -25,6 +25,71 @@ es.max_spearman_myeloid_checkpt <- gsva(X, deg_myeloid_checkpt_list, min.sz > 1,
 es.max_spearman_myeloid_checkpt <- t(es.max_spearman_myeloid_checkpt)
 es.max_spearman_myeloid_checkpt <- as.data.frame(es.max_spearman_myeloid_checkpt)
 
+#####  KM-survival analysis
+
+for (i in names(deg_myeloid_checkpt_list) ) {
+  # i = names(deg_list) [1]
+  subset = paste0('',i)
+  print(subset)
+  v = as.numeric(es.max_myeloid[,i]) #每一个亚群表达量。
+  sub_group <- ifelse( v < 0,"low","high") #如果表达量小于0的话，就定义为low。gsva处理过表达量。0.几左右
+  table(sub_group) 
+  phe$sub_group=sub_group
+  # Fit survival curves
+  require("survival")
+  fit <- survfit(Surv(time, event) ~ sub_group, data = phe)
+  library("survminer")
+  survp <- ggsurvplot(fit, data = phe,
+                      surv.median.line = "hv", # Add medians survival
+                      pval = TRUE, # Add p-value and tervals 
+                      conf.int = TRUE, # Add the 95% confidence band
+                      risk.table = TRUE, # Add risk table
+                      tables.height = 0.2,
+                      tables.theme = theme_cleantable(),
+                      palette = c("red","blue"),
+                      ggtheme = theme_bw(),
+                      title = subset)
+  print(survp)
+  splots[[g]] <- survp
+  g = g + 1
+}
+
+
+for (i in names(deg_myeloid_checkpt_list) ) {
+  # i = names(deg_list) [1]
+  subset = paste0(i)
+  print(subset)
+  v = as.numeric(es.max_myeloid[,i]) #每一个亚群表达量。
+  phe$v <- v
+  head(phe)
+  sur.cut <- surv_cutpoint(phe,
+                           time= 'time',
+                           event = 'event' ,
+                           variables = 'v',
+                           minprop = 0.2)
+  sur.cat <- surv_categorize(sur.cut)
+  head(sur.cat)
+  sfit <- survfit(Surv(time, event) ~ v, data = sur.cat)
+  p_surv_cut <- ggsurvplot(sfit, data = phe,
+                           surv.median.line = "hv", # Add medians survival
+                           pval = TRUE, # Add p-value and tervals 
+                           conf.int = TRUE, # Add the 95% confidence band
+                           risk.table = TRUE, # Add risk table
+                           tables.height = 0.2,
+                           tables.theme = theme_cleantable(),
+                           palette = c('red','blue'),
+                           ggtheme = theme_bw(),
+                           title = subset)
+  print(p_surv_cut)
+  csplots[[cg]] <- p_surv_cut
+  cg = cg + 1
+}  ### This gives Supplementary Figure S4A
+
+
+
+
+
+
 
 
 
