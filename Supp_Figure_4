@@ -1,6 +1,9 @@
 ## Supplementary Figure S4:
 
-## Figure S4AL
+## loading the required R packages 
+
+
+## Figure S4A
 
 # Need pre-processing the bulk-RNA seq data of the TCGA-BRCA cohort first: 
 
