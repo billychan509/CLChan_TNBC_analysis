@@ -7,6 +7,7 @@ library(ggplot2)
 library(survival)
 library(survminer)
 library(GSVA)
+library(iTALK)
 library(dichromat)
 
 ## Figure S4A
