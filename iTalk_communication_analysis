@@ -18,12 +18,11 @@ testing_TNBC@meta.data[testing_TNBC@meta.data$subtype == "unassigned_2", 'subtyp
 
 exp_1 <- as.data.frame(t(testing_TNBC[["RNA"]]$counts.1))
 exp_2 <- as.data.frame(t(testing_TNBC[["RNA"]]$counts.2))
-exp <- rbind(exp_1,exp_2)
+exp <- rbind(exp_1,exp_2) # Combining the count matrix of the scRNA-seq data
 
 exp$cell_type <- testing_TNBC@meta.data$subtype
 exp$compare_group <- testing_TNBC@meta.data$IHC
 length(unique(testing_TNBC$subtype))
-
 
 highly_exprs_genes <- rawParse(exp,top_genes=50,stats='mean')
 
@@ -36,9 +35,9 @@ allcolour=c("red2","#1E90FF","#20B2AA","#FFA500","#9370DB","#98FB98","#F08080","
             "#FF1493","#0000CD","#008B8B","#FFE4B5","#8A2BE2","#E9967A","#4682B4","#32CD32","#F0E68C","#FFFFE0","#EE82EE",
             "#FF6347","#6A5ACD","#9932CC","#8B008B","#8B4513","#DEB887")
 
-par(mfrow=c(1,1))
-res<-NULL
+par(mfrow=c(1,1)) 
 
+res<-NULL
 
 par(mfrow=c(1,1))
 res<-NULL
@@ -53,7 +52,7 @@ for(comm_type in comm_list){
                           "#FFFFF0", "#DC143C", "#00FFFF")
   ,link.arr.type = NULL)
   title(comm_type)
-  res<-rbind(res,res_cat)}
+  res<-rbind(res,res_cat)} ### This gives the Figure S4B
 
 
 
