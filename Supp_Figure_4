@@ -1,1 +1,26 @@
 ## Supplementary Figure S4:
+
+## Figure S4AL
+
+# Need pre-processing the bulk-RNA seq data of the TCGA-BRCA cohort first: 
+
+deg_myeloid_checkpt_list <- list('PD1' = c("PDCD1"), "SIRPA" = c("SIRPA"), "LILRB2" = c("LILRB2"))
+
+X=as.matrix(exprSet_basal)
+
+es.max_spearman_myeloid_checkpt <- gsva(X, deg_myeloid_checkpt_list, min.sz > 1,
+               mx.diff=FALSE, verbose=T, 
+               parallel.sz=4)
+
+
+
+
+
+
+
+
+
+
+
+
+
