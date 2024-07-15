@@ -1,6 +1,10 @@
 ### Supplementary Figure S5:
 
 ## Loading the required R libraries:
+library(GSVA)
+library(corrplot)
+library(ggcorrplot)
+library(Seurat)
 
 ### Figure S5A:
 
