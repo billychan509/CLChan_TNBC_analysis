@@ -18,3 +18,5 @@ AverageHeatmap(object = mac_APOE_non_responder_all_myeloid_t_combination_therapy
                border = T,
                htRange = c(-2, 0, 2),
                htCol = c("blue","white","red2"))
+
+### Supplementary Figure S5B:
