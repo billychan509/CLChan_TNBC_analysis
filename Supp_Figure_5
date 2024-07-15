@@ -1,8 +1,31 @@
 ### Supplementary Figure S5:
 
+## Loading the required R libraries:
+
 ### Figure S5A:
 
+# Need pre-procesing of the bulk RNA-seq data of TCGA-BRCA cohort first!
 
+deg_IL_list <- list(
+  "FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
+                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
+                             "MMP9","ENPP2","PLA2G2D","IGF1"),
+  "FOLR2" = c("FOLR2"), "IL2" = c("IL2"), "IL12" = c("IL12"), "IL15" = c("IL15"),
+  "IL18" = c("IL18"), "IL21" = c("IL21"), "IL23A" = c("IL23A"),
+  "IL12B" = c("IL12B"), "IL1A" = c("IL1A"), "IL1B" = c("IL1B"),
+  "IL18BP" = c("IL18BP"), "IL27" = c("IL27"), "IL16" = c("IL16"),
+  "IL18" = c("IL18"), "IL15" = c("IL15"), "IL6ST" = c("IL6ST"),
+  "IL10" = c("IL10"), "IL6" = c("IL6"), "IL11" = c("IL11"),
+  "IL33" = c("IL33"), "IL4I1" = c("IL4I1"), "IL7" = c("IL7"))
+
+X=as.matrix(exprSet_basal)
+es.max_IL <- gsva(X, deg_IL_list, min.sz > 1,
+               mx.diff=FALSE, verbose=T, 
+               parallel.sz=4)
+
+es.max_IL  <- t(es.max_IL)
+es.max_IL  <- as.data.frame(es.max_IL)
+ 
 ### Figure S5B:
 
 ### mac_APOE cluster (non-responder):
