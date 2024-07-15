@@ -1,3 +1,10 @@
+### Supplementary Figure S5:
+
+### Figure S5A:
+
+
+### Figure S5B:
+
 ### mac_APOE cluster (non-responder):
 Idents(non_responder_all_myeloid_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
 FeaturePlot(non_responder_all_myeloid_t_combination_therapy_seurat, features = 'APOE', label = T) ## check which myeloid cluster expresses APOE
@@ -19,4 +26,4 @@ AverageHeatmap(object = mac_APOE_non_responder_all_myeloid_t_combination_therapy
                htRange = c(-2, 0, 2),
                htCol = c("blue","white","red2"))
 
-### Supplementary Figure S5B:
+### Figure S5C:
