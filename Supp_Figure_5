@@ -30,7 +30,13 @@ es.max_IL <- gsva(X, deg_IL_list, min.sz > 1,
 
 es.max_IL  <- t(es.max_IL)
 es.max_IL  <- as.data.frame(es.max_IL)
- 
+
+color_palette <- colorRampPalette(c("#2166ac", "#f7f7f7", "#b2182b"))(100)
+
+corrplot(cor(es.max_IL, method = 'spearman'), method = 'circle', type = 'full',
+         tl.col = 'black', tl.srt = 45, col  =color_palette) ## This gives the Figure S5A
+
+
 ### Figure S5B:
 
 ### mac_APOE cluster (non-responder):
