@@ -43,7 +43,7 @@ VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QB", pt.siz
 VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QC", pt.size = 0) + geom_boxplot( width = 0.2, fill = "white")
 
 
-### Figure S5C:
+### Figure S5e:
 ### mac_APOE cluster (non-responder):
 Idents(non_responder_all_myeloid_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
 FeaturePlot(non_responder_all_myeloid_t_combination_therapy_seurat, features = 'APOE', label = T) ## check which myeloid cluster expresses APOE
@@ -65,5 +65,20 @@ AverageHeatmap(object = mac_APOE_non_responder_all_myeloid_t_combination_therapy
                htRange = c(-2, 0, 2),
                htCol = c("blue","white","red2"))
 
-
+### Figure S5f:
+Idents(mac_APOE_combination_therapy_responder_seurat) <- "patient"
+AverageHeatmap(object = mac_APOE_combination_therapy_responder_seurat,
+               markerGene = FOLR2_mac_genes,
+               clusterAnnoName = T,
+               showRowNames = T,
+               row_title = "FOLR2 signature",
+               column_names_rot = 90,
+               column_names_gp = gpar(fontsize = 12),
+               group.by = "ident",
+               cluster_columns = T,
+               cluster_rows = T,
+               fontsize = 15,
+               border = T,
+               htRange = c(-2, 0, 2),
+               htCol = c("blue","white","red2"))
 
