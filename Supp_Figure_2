@@ -8,6 +8,7 @@ library(Seurat)
 library(NMF)
 library(ggalluvial)
 library(iTALK)
+library(grid)
 
 ### Further processing of the loaded data:
 cellchat_contact <- cellchat
