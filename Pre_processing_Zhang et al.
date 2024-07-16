@@ -2,6 +2,7 @@ library(Seurat)
 library(scRNAtoolVis)
 library(ggplot2)
 library(tidyverse)
+library(grid)
 
 ### Loading the scRNA seq data of zhang et al. (2021)
 zhang_bc.matrix <- ReadMtx(mtx = "GSE169246_TNBC_RNA.counts.mtx.gz",
