@@ -38,6 +38,10 @@ corrplot(cor(es.max_IL, method = 'spearman'), method = 'circle', type = 'full',
 
 
 ### Figure S5B:
+VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QA", pt.size = 0) + geom_boxplot( width = 0.2, fill = "white")
+VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QB", pt.size = 0) + geom_boxplot( width = 0.2, fill = "white")
+VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QC", pt.size = 0) + geom_boxplot( width = 0.2, fill = "white")
+
 
 ### mac_APOE cluster (non-responder):
 Idents(non_responder_all_myeloid_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
