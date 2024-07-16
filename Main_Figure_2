@@ -11,6 +11,7 @@ library(survminer)
 library(survival)
 library(GSVA)
 library(COSG)
+library(grid)
 
 # Please pre-process the TCGA-BRCA data first, we only need to the bulk-RNA seq data from the basal-like breast cancer patients for correlation analysis/ survival analysis:
 # Figure 2a and 2d:
