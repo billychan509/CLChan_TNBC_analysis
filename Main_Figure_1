@@ -1,4 +1,18 @@
-##########
+## Loading the required R libraries
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(enrichplot)
+library(enrichR)
+library(ggplot2)
+library(Seurat)
+library(ComplexHeatmap)
+library(circlize)
+library(tidyverse)
+library(survminer) 
+library(survival)
+library(GSVA)
+library(COSG)
+library(grid)
 
 #Figure 1a.: Cartoon created with BioRender
 
