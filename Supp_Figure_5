@@ -5,16 +5,16 @@ library(GSVA)
 library(corrplot)
 library(ggcorrplot)
 library(Seurat)
+library(scRNAtoolVis)
 library(ggplot2)
+library(tidyverse)
+library(grid)
 
 ### Figure S5A:
 
 # Need pre-procesing of the bulk RNA-seq data of TCGA-BRCA cohort first!
 
-deg_IL_list <- list(
-  "FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",
-                             'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3",
-                             "MMP9","ENPP2","PLA2G2D","IGF1"),
+deg_IL_list <- list( "FOLR2_mac_signature"  = c('MRC1','FOLR2','CCL18','BLVRB',"DAB2","FUCA1",'SELENOP','SLC40A1','WWP1',"CXCL12","PLD3", "MMP9","ENPP2","PLA2G2D","IGF1"),
   "FOLR2" = c("FOLR2"), "IL2" = c("IL2"), "IL12" = c("IL12"), "IL15" = c("IL15"),
   "IL18" = c("IL18"), "IL21" = c("IL21"), "IL23A" = c("IL23A"),
   "IL12B" = c("IL12B"), "IL1A" = c("IL1A"), "IL1B" = c("IL1B"),
@@ -43,6 +43,7 @@ VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QB", pt.siz
 VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QC", pt.size = 0) + geom_boxplot( width = 0.2, fill = "white")
 
 
+### Figure S5C:
 ### mac_APOE cluster (non-responder):
 Idents(non_responder_all_myeloid_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
 FeaturePlot(non_responder_all_myeloid_t_combination_therapy_seurat, features = 'APOE', label = T) ## check which myeloid cluster expresses APOE
@@ -64,4 +65,5 @@ AverageHeatmap(object = mac_APOE_non_responder_all_myeloid_t_combination_therapy
                htRange = c(-2, 0, 2),
                htCol = c("blue","white","red2"))
 
-### Figure S5C:
+
+
