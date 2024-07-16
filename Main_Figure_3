@@ -7,6 +7,7 @@ library(GSVA)
 library(CellChat)
 library(tidyverse)
 library(ggplot2)
+library(grid)
 
 ## Pre-processing of scRNA seq data of Wu et al. (2021) is needed before printing the Figure 3a - 3d
 
