@@ -11,6 +11,7 @@ library(harmony)
 library(scRNAtoolVis)
 library(VennDiagram)
 library(COSG)
+library(grid)
 
 #1. Untar file in R:
 untar_file_name <- list.files(".")
