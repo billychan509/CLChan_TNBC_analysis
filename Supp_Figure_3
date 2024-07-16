@@ -6,6 +6,7 @@
 library(Seurat)
 library(tidyverse)
 library(ggplot2)
+library(grid)
 
 # Markers genes for NKT cells / T-cells (use the Seurat object NK_T_cells_seurat)
 
