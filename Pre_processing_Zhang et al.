@@ -128,10 +128,6 @@ myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat <- myeloid_non_r
   FindClusters(res= 0.04) %>%
   RunUMAP(dims = 1:50, reduction='pca')
 
-
-
-
-
 ### Responders' scRNA-seq data:
 
 ### subsetting the chemotherapy responders (containing both pre-treatment and post-treatment sample)
@@ -160,7 +156,18 @@ combination_therapy_responder_seurat <- subset(combination_therapy_all_seurat, i
 Idents(combination_therapy_responder_seurat) <- "RNA_snn_res.0.04"
 myeloid_combination_therapy_responder_seurat <- subset(combination_therapy_responder_seurat, idents = "5") ## cluster 5 is myeloid cells (CD68+)
 
+myeloid_combination_therapy_responder_seurat <- myeloid_combination_therapy_responder_seurat %>%
+  NormalizeData() %>% 
+  FindVariableFeatures()  %>%
+  ScaleData() %>%
+  RunPCA()
 
+myeloid_combination_therapy_responder_seurat <- myeloid_combination_therapy_responder_seurat %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.04) %>% # reclustering of the myeloid cells from the responders of combinatorial therapy
+  RunUMAP(dims = 1:50, reduction='pca')  
+
+FeaturePlot(myeloid_combination_therapy_responder_seurat, features = 'APOE', label = T) ### check which cluster expresses APOE
 
 
 
