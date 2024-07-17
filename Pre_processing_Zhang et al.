@@ -161,7 +161,7 @@ combination_therapy_all_seurat <- merge(combination_therapy_pre_seurat, combinat
 Idents(combination_therapy_all_seurat) <- "therapy_response"
 combination_therapy_responder_seurat <- subset(combination_therapy_all_seurat, idents = 'PR') # subsetting only the responders
 Idents(combination_therapy_responder_seurat) <- "RNA_snn_res.0.04"
-myeloid_combination_therapy_responder_seurat <- subset(combination_therapy_responder_seurat, idents = "5") ## cluster 5 is myeloid cells (CD68+
+myeloid_combination_therapy_responder_seurat <- subset(combination_therapy_responder_seurat, idents = "5") ## cluster 5 is myeloid cells (CD68+)
 
 
 
