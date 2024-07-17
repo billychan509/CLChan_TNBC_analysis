@@ -105,7 +105,7 @@ non_responder_all_t_combination_therapy_seurat <- non_responder_all_t_combinatio
 
 ## subsetting the myeloid cells (CD68-expressing):
 Idents(non_responder_all_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
-
+FeaturePlot(non_responder_all_t_combination_therapy_seurat, features = "CD68", label = T) ## Determind which clusters express CD68
 myeloid_non_responder_all_t_combination_therapy_seurat <- subset(non_responder_all_t_combination_therapy_seurat,
                                                                          idents = c('2','3'))
 
@@ -116,8 +116,9 @@ myeloid_non_responder_all_t_combination_therapy_seurat <- myeloid_non_responder_
 
 colnames(myeloid_non_responder_all_t_combination_therapy_seurat@meta.data)[7] <- "myeloid_cells_NR"
 
-## further subsetting the APOE expressing clusters for analysis:
+## further subsetting the APOE-expressing clusters for analysis:
 Idents(myeloid_non_responder_all_t_combination_therapy_seurat) <- 'RNA_snn_res.0.04'
+FeaturePlot(myeloid_non_responder_all_t_combination_therapy_seurat, features = "APOE", label = T) ## Determine which myeloid clusters express APOE
 myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat <- subset(myeloid_non_responder_all_t_combination_therapy_seurat,
                                                                          idents = c('0','1')) # subsetting the mac_APOE cluster
 
