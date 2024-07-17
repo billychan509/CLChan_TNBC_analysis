@@ -45,10 +45,10 @@ VlnPlot(mac_APOE_combination_therapy_responder_seurat, features = "C1QC", pt.siz
 
 ### Figure S5e:
 ### mac_APOE cluster (non-responder):
-Idents(non_responder_all_myeloid_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
-FeaturePlot(non_responder_all_myeloid_t_combination_therapy_seurat, features = 'APOE', label = T) ## check which myeloid cluster expresses APOE
-mac_APOE_non_responder_all_myeloid_t_combination_therapy_seurat <- subset(non_responder_all_myeloid_t_combination_therapy_seurat, ident = '2')
-Idents(mac_APOE_non_responder_all_myeloid_t_combination_therapy_seurat) <- 'patient'
+Idents(non_responder_all_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
+FeaturePlot(non_responder_all_t_combination_therapy_seurat, features = 'APOE', label = T) ## check which myeloid cluster expresses APOE
+mac_APOE_non_responder_all_t_combination_therapy_seurat <- subset(non_responder_all_t_combination_therapy_seurat, ident = '2')
+Idents(mac_APOE_non_responder_all_t_combination_therapy_seurat) <- 'patient'
 
 AverageHeatmap(object = mac_APOE_non_responder_all_myeloid_t_combination_therapy_seurat,
                markerGene = FOLR2_mac_genes,
