@@ -100,6 +100,15 @@ non_responder_all_myeloid_t_combination_therapy_seurat <- non_responder_all_myel
 
 ### Responders' scRNA-seq data:
 
+### subsetting the chemotherapy responders (containing both pre-treatment and post-treatment sample)
+Idents(zhang_pre_t_seurat_obj) <- 'treatment' 
+chem_responder_seurat_pre <- subset(zhang_pre_t_seurat_obj, idents = 'paclitaxel')
+Idents(chem_responder_seurat_pre)  <- 'therapy_response'
+chem_responder_seurat_pre <- subset(chem_responder_seurat_pre, idents = 'PR') ## Then you can subset the data for the responders of the chemotherapeutic response (pre-treatment data)
 
+Idents(zhang_post_t_seurat_obj) <- 'treatment' 
+chem_responder_seurat_post <- subset(zhang_post_t_seurat_obj, idents = 'paclitaxel')
+Idents(chem_responder_seurat_post)  <- 'therapy_response'
+chem_responder_seurat_post <- subset(chem_responder_seurat_post, idents = 'PR') ## Then you can subset the data for the responders of the chemotherapeutic response (post-treatment data)
 
 
