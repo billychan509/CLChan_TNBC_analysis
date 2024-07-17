@@ -92,14 +92,14 @@ myeloid_zhang_post_t_seurat_obj <- subset(zhang_post_t_seurat_obj, idents = '3')
 
 ### Non-responders' scRNA-seq data (combinatorial treatment):
 Idents(zhang_pre_t_seurat_obj) <- "patient"
-non_responder_pre_myeloid_t_combination_therapy_seurat <- subset(zhang_pre_t_seurat_obj,
+non_responder_pre_t_combination_therapy_seurat <- subset(zhang_pre_t_seurat_obj,
                                                                  ident = c('Pre_P017_t','Pre_P002_t','Pre_P004_t','Pre_P005_t','Pre_P016_t'))
 Idents(zhang_post_t_seurat_obj) <- "patient"
 non_responder_post_myeloid_t_combination_therapy_seurat <- subset(zhang_post_t_seurat_obj, 
                                                                   ident = c('Post_P017_t','Post_P002_t','Post_P005_t','Post_P016_t'))
 
-non_responder_all_myeloid_t_combination_therapy_seurat <- merge(non_responder_post_myeloid_t_combination_therapy_seurat, 
-                                                                non_responder_pre_myeloid_t_combination_therapy_seurat)
+non_responder_all_t_combination_therapy_seurat <- merge(non_responder_post_t_combination_therapy_seurat, 
+                                                                non_responder_pre_t_combination_therapy_seurat)
 
 non_responder_all_myeloid_t_combination_therapy_seurat <- non_responder_all_myeloid_t_combination_therapy_seurat %>%
   NormalizeData() %>% 
@@ -119,8 +119,11 @@ Idents(zhang_post_t_seurat_obj) <- 'treatment'
 chem_responder_seurat_post <- subset(zhang_post_t_seurat_obj, idents = 'paclitaxel')
 Idents(chem_responder_seurat_post)  <- 'therapy_response'
 chem_responder_seurat_post <- subset(chem_responder_seurat_post, idents = 'PR') ## Then you can subset the data for the responders of the chemotherapeutic response (post-treatment data)
-
 chem_responder_seurat_all <- merge(chem_responder_seurat_post,  chem_responder_seurat_pre) ####
+
+### subsetting the myeloid cells of the patients receiving chemotherapy:
+Idents(chem_responder_seurat_all) <- "RNA_snn_res.0.04"
+myeloid_chem_responder_seurat_all <- subset(chem_responder_seurat_all, idents = "1") ## cluster 1 is the myeloid (CD68+) cells
 
 ## Subsetting the chemotherapeutic responders:
 
