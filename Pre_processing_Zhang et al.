@@ -168,6 +168,7 @@ myeloid_combination_therapy_responder_seurat <- myeloid_combination_therapy_resp
   RunUMAP(dims = 1:50, reduction='pca')  
 
 FeaturePlot(myeloid_combination_therapy_responder_seurat, features = 'APOE', label = T) ### check which cluster expresses APOE
-
-
+mac_APOE_combination_therapy_responder_seurat<- subset(myeloid_combination_therapy_responder_seurat, idents = '0')
+Idents(mac_APOE_combination_therapy_responder_seurat) <- 'treatment_state'
+mac_APOE_combination_therapy_responder_seurat_post_treatment <- subset(mac_APOE_combination_therapy_responder_seurat, idents = "post treatment")
 
