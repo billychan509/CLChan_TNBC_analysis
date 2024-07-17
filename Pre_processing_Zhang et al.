@@ -78,7 +78,16 @@ zhang_pre_t_seurat_obj@meta.data[zhang_pre_t_seurat_obj@meta.data$patient == 'Pr
 zhang_pre_t_seurat_obj@meta.data$treatment_response <- paste0(zhang_pre_t_seurat_obj@meta.data$treatment,"_",zhang_pre_t_seurat_obj@meta.data$therapy_response)
 zhang_post_t_seurat_obj@meta.data$treatment_response <- paste0(zhang_post_t_seurat_obj@meta.data$treatment,"_",zhang_post_t_seurat_obj@meta.data$therapy_response)
 
+### Subsetting only the data for the myeloid cells:
+Idents(zhang_pre_t_seurat_obj) <- "RNA_snn_res.0.04"
+myeloid_zhang_pre_t_seurat_obj <- subset(zhang_pre_t_seurat_obj, idents = '2') ## Myeloid cells of pre-treatment samples
+
+Idents(zhang_post_t_seurat_obj) <- "RNA_snn_res.0.04"
+myeloid_zhang_post_t_seurat_obj <- subset(zhang_post_t_seurat_obj, idents = '3') ## Myeloid cells of post-treatment samples
+
 ###
+
+
 
 
 ### Non-responders' scRNA-seq data (combinatorial treatment):
@@ -111,4 +120,7 @@ chem_responder_seurat_post <- subset(zhang_post_t_seurat_obj, idents = 'paclitax
 Idents(chem_responder_seurat_post)  <- 'therapy_response'
 chem_responder_seurat_post <- subset(chem_responder_seurat_post, idents = 'PR') ## Then you can subset the data for the responders of the chemotherapeutic response (post-treatment data)
 
+chem_responder_seurat_all <- merge(chem_responder_seurat_post,  chem_responder_seurat_pre) ####
+
+## Subsetting the chemotherapeutic responders:
 
