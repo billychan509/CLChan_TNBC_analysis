@@ -85,27 +85,54 @@ myeloid_zhang_pre_t_seurat_obj <- subset(zhang_pre_t_seurat_obj, idents = '2') #
 Idents(zhang_post_t_seurat_obj) <- "RNA_snn_res.0.04"
 myeloid_zhang_post_t_seurat_obj <- subset(zhang_post_t_seurat_obj, idents = '3') ## Myeloid cells of post-treatment samples
 
-###
-
-
-
 
 ### Non-responders' scRNA-seq data (combinatorial treatment):
 Idents(zhang_pre_t_seurat_obj) <- "patient"
 non_responder_pre_t_combination_therapy_seurat <- subset(zhang_pre_t_seurat_obj,
                                                                  ident = c('Pre_P017_t','Pre_P002_t','Pre_P004_t','Pre_P005_t','Pre_P016_t'))
 Idents(zhang_post_t_seurat_obj) <- "patient"
-non_responder_post_myeloid_t_combination_therapy_seurat <- subset(zhang_post_t_seurat_obj, 
+non_responder_post_t_combination_therapy_seurat <- subset(zhang_post_t_seurat_obj, 
                                                                   ident = c('Post_P017_t','Post_P002_t','Post_P005_t','Post_P016_t'))
 
 non_responder_all_t_combination_therapy_seurat <- merge(non_responder_post_t_combination_therapy_seurat, 
                                                                 non_responder_pre_t_combination_therapy_seurat)
 
-non_responder_all_myeloid_t_combination_therapy_seurat <- non_responder_all_myeloid_t_combination_therapy_seurat %>%
+non_responder_all_t_combination_therapy_seurat <- non_responder_all_t_combination_therapy_seurat %>%
   NormalizeData() %>% 
   FindVariableFeatures()  %>%
   ScaleData() %>%
   RunPCA()
+
+## subsetting the myeloid cells (CD68-expressing):
+Idents(non_responder_all_t_combination_therapy_seurat) <- "RNA_snn_res.0.04"
+
+myeloid_non_responder_all_t_combination_therapy_seurat <- subset(non_responder_all_t_combination_therapy_seurat,
+                                                                         idents = c('2','3'))
+
+myeloid_non_responder_all_t_combination_therapy_seurat <- myeloid_non_responder_all_t_combination_therapy_seurat %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.04) %>%
+  RunUMAP(dims = 1:50, reduction='pca')
+
+colnames(myeloid_non_responder_all_t_combination_therapy_seurat@meta.data)[7] <- "myeloid_cells_NR"
+
+## further subsetting the APOE expressing clusters for analysis:
+Idents(myeloid_non_responder_all_t_combination_therapy_seurat) <- 'RNA_snn_res.0.04'
+myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat <- subset(myeloid_non_responder_all_t_combination_therapy_seurat,
+                                                                         idents = c('0','1')) # subsetting the mac_APOE cluster
+
+
+colnames(myeloid_non_responder_all_t_combination_therapy_seurat@meta.data)[7] <- "myeloid_cells_NR"
+
+myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat <- myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat %>% 
+  FindNeighbors(dims = 1:50, reduction='pca') %>%
+  FindClusters(res= 0.04) %>%
+  RunUMAP(dims = 1:50, reduction='pca')
+
+Idents(myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat) <- 'treatment_state'
+VlnPlot(myeloid_non_responder_all_mac_APOE_t_combination_therapy_seurat, features = "FOLR2",
+        split.by = "treatment_state", sort = 'increasing') + geom_boxplot(width = 0.2, fill = 'white') + stat_compare_means()
+
 
 ### Responders' scRNA-seq data:
 
@@ -119,11 +146,23 @@ Idents(zhang_post_t_seurat_obj) <- 'treatment'
 chem_responder_seurat_post <- subset(zhang_post_t_seurat_obj, idents = 'paclitaxel')
 Idents(chem_responder_seurat_post)  <- 'therapy_response'
 chem_responder_seurat_post <- subset(chem_responder_seurat_post, idents = 'PR') ## Then you can subset the data for the responders of the chemotherapeutic response (post-treatment data)
-chem_responder_seurat_all <- merge(chem_responder_seurat_post,  chem_responder_seurat_pre) ####
+chem_responder_seurat_all <- merge(chem_responder_seurat_post,  chem_responder_seurat_pre) #### merging the seurat objects 
 
 ### subsetting the myeloid cells of the patients receiving chemotherapy:
 Idents(chem_responder_seurat_all) <- "RNA_snn_res.0.04"
 myeloid_chem_responder_seurat_all <- subset(chem_responder_seurat_all, idents = "1") ## cluster 1 is the myeloid (CD68+) cells
 
-## Subsetting the chemotherapeutic responders:
+### Combinatorial treatment:
+combination_therapy_pre_seurat <- subset(zhang_pre_t_seurat_obj, idents = "Anti-PD-L1+ paclitaxel")
+combination_therapy_post_seurat <- subset(zhang_post_t_seurat_obj, idents = "Anti-PD-L1+ paclitaxel")
+combination_therapy_all_seurat <- merge(combination_therapy_pre_seurat, combination_therapy_post_seurat)
+
+Idents(combination_therapy_all_seurat) <- "therapy_response"
+combination_therapy_responder_seurat <- subset(combination_therapy_all_seurat, idents = 'PR') # subsetting only the responders
+Idents(combination_therapy_responder_seurat) <- "RNA_snn_res.0.04"
+myeloid_combination_therapy_responder_seurat <- subset(combination_therapy_responder_seurat, idents = "5") ## cluster 5 is myeloid cells (CD68+
+
+
+
+
 
