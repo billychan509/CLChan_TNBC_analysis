@@ -211,3 +211,27 @@ Idents(CAF_seurat_filtered) <- "CAFs"
 CAF_seurat_filtered <- subset(CAF_seurat_filtered, ident = c("collagen_CAF","iCAFs","activated CAF","mCAF","ifn CAFs"))
 
 CAF_seurat_filtered@meta.data$subtype <- CAF_seurat_filtered@meta.data$CAFs
+
+
+## TNM staging:
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3838', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3921', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3941', "TNM staging"] <- 'pT1c'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3946', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3948', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4040', "TNM staging"] <- 'pT2'
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4067', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4290A', "TNM staging"] <- 'pT4b'
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44041', "TNM staging"] <- 'pT4b'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4461', "TNM staging"] <- 'pT3'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4463', "TNM staging"] <- 'pT3'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4465', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4495', "TNM staging"] <- 'pT1c'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44971', "TNM staging"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44991', "TNM staging"] <- 'Not Available'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4515', "TNM staging"] <- 'pT1c'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID45171', "TNM staging"] <- 'Not Available'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4530N', "TNM staging"] <- 'pT3'
