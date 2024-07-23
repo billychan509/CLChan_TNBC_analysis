@@ -1,0 +1,1 @@
+dittoBarPlot(myeloid_seurat_filtered, "subtype", group.by = "TNM staging", split.by = "IHC")
