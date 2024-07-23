@@ -1,1 +1,51 @@
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3838', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3921', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3941', "Tumor size"] <- 'pT1c'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3946', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3948', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4040', "Tumor size"] <- 'pT2'
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4067', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4290A', "Tumor size"] <- 'pT4b'
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44041', "Tumor size"] <- 'pT4b'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4461', "Tumor size"] <- 'pT3'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4463', "Tumor size"] <- 'pT3'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4465', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4495', "Tumor size"] <- 'pT1c'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44971', "Tumor size"] <- 'pT2'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44991', "Tumor size"] <- 'Not Available'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4515', "Tumor size"] <- 'pT1c'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID45171', "Tumor size"] <- 'Not Available'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4530N', "Tumor size"] <- 'pT3'
+
+Idents(myeloid_seurat_filtered) <- "Tumor size"
+
+averageHeatmap(object = merged_seurat_obj,
+               markerGene = mac_APOE_refined_genes)
+
+
+########
+
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3838', "Lymph nodes metastasis"] <- 'N1a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3921', "Lymph nodes metastasis"] <- 'N2a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3941', "Lymph nodes metastasis"] <- 'N1a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3946', "Lymph nodes metastasis"] <- 'N0'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID3948', "Lymph nodes metastasis"] <- 'N2a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4040', "Lymph nodes metastasis"] <- 'N0'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4067', "Lymph nodes metastasis"] <- 'N1'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4290A', "Lymph nodes metastasis"] <- 'Nx'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44041', "Lymph nodes metastasis"] <- 'N1a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4461', "Lymph nodes metastasis"] <- 'N1a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4463', "Lymph nodes metastasis"] <- 'N1'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4465', "Lymph nodes metastasis"] <- 'N0'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4495', "Lymph nodes metastasis"] <- 'N0'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44971', "Lymph nodes metastasis"] <- 'N1a'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID44991', "Lymph nodes metastasis"] <- 'Not Available'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4515', "Lymph nodes metastasis"] <- 'N1'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID45171', "Lymph nodes metastasis"] <- 'Not Available'
+myeloid_seurat_filtered@meta.data[myeloid_seurat_filtered@meta.data$patient == 'CID4530N', "Lymph nodes metastasis"] <- 'N3'
+
+
+
 dittoBarPlot(myeloid_seurat_filtered, "subtype", group.by = "TNM staging", split.by = "IHC")
