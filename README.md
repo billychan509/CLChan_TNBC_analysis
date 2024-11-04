@@ -8,4 +8,3 @@
 
 Chan, C. L., To, A., Zhang, S., Wong, J. W. H., Huang, Y., Chao, Y., & Sugimura, R. (2024). Lipidic and senescent macrophages predict progression and response to combinatorial immunotherapy in triple-negative breast cancer. doi:10.1101/2024.06.24.600550
 
-# Bioinformatic analysis done by Billy Chun Lai CHAN 
